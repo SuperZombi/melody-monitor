@@ -1,8 +1,13 @@
-import asyncio
 from winsdk.windows.media.control import GlobalSystemMediaTransportControlsSessionManager as MediaManager
 from winsdk.windows.media.control import GlobalSystemMediaTransportControlsSessionPlaybackStatus as PlayStatus
 from winsdk.windows.storage.streams import DataReader, Buffer, InputStreamOptions
+from threading import Thread
+import os, sys
+import asyncio
 import json
+import base64
+import copy
+import eel
 
 
 class Thumbnail:
@@ -12,11 +17,13 @@ class Thumbnail:
         return self
 
     async def get(self):
-        buffer = Buffer(self.size)
-        await thumb.read_async(buffer, buffer.capacity, InputStreamOptions.READ_AHEAD)
+        buffer = Buffer(self.thumb.size)
+        await self.thumb.read_async(buffer, buffer.capacity, InputStreamOptions.READ_AHEAD)
         buffer_reader = DataReader.from_buffer(buffer)
         byte_buffer = bytearray(buffer_reader.read_buffer(buffer.length))
-        return byte_buffer
+        img_base64 = base64.b64encode(byte_buffer).decode('utf-8')
+        img_data_url = f"data:image/jpeg;base64,{img_base64}"
+        return img_data_url
 
     def __repr__(self):
         return str(self.thumb.size)
@@ -67,15 +74,29 @@ async def get_media_info():
         MediaInfo = localMediaInfo
         print(MediaInfo)
 
+        answer = copy.copy(localMediaInfo)
+        if answer.get("thumbnail"):
+            answer["thumbnail"] = await answer["thumbnail"].get()
+        eel.update_media_info(answer)
+
 
 async def addEventListeners():
     while True:
         await get_media_info()
         await asyncio.sleep(3)
 
-    # event = asyncio.Event()
-    # await event.wait()
+def startBackgroundLoop():
+    asyncio.run(addEventListeners())
+
+
+def resource_path(relative_path):
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
 
 
 if __name__ == '__main__':
-    current_media_info = asyncio.run(addEventListeners())
+    eel.init(resource_path("web"))
+
+    Thread(target=startBackgroundLoop, daemon=True).start()
+
+    eel.start("index.html", mode="default")

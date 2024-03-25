@@ -1,0 +1,69 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0; padding: 0;
+    --margin: 5px;
+    --padding: 20px;
+    --gap: 25px;
+    --image-size: 100px;
+    --max-height: 140px;
+    font-size: 12pt;
+}
+.track-info {
+    display: flex;
+    align-items: center;
+    margin: var(--margin);
+    width: calc(100% - var(--margin) * 2);
+    height: calc(100vh - var(--margin) * 2);
+    max-height: var(--max-height);
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    gap: var(--gap);
+    padding: var(--padding);
+    box-sizing: border-box;
+}
+.track-image {
+    width: var(--image-size);
+    height: var(--image-size);
+    border-radius: 4px;
+    object-fit: cover;
+}
+.track-details {
+    flex: 1;
+    overflow: hidden;
+}
+.track-name {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    width: fit-content; 
+}
+.track-name.marquee{
+    animation: marquee 5s linear infinite;
+}
+@keyframes marquee {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+.track-author {
+    font-size: 1em;
+    color: #666;
+}
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #ddd;
+    border-radius: 5px;
+    margin-top: 20px;
+    overflow: hidden;
+}
+.progress {
+    width: 50%;
+    height: 100%;
+    background-color: #007bff;
+}
