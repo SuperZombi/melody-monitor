@@ -14,16 +14,18 @@ class Thumbnail:
     def __init__(self): pass
     async def new(self, thumbnail):
         self.thumb = await thumbnail.open_read_async()
+        self.result = None
         return self
 
     async def get(self):
+        if self.result: return self.result
         buffer = Buffer(self.thumb.size)
         await self.thumb.read_async(buffer, buffer.capacity, InputStreamOptions.READ_AHEAD)
         buffer_reader = DataReader.from_buffer(buffer)
         byte_buffer = bytearray(buffer_reader.read_buffer(buffer.length))
         img_base64 = base64.b64encode(byte_buffer).decode('utf-8')
-        img_data_url = f"data:image/jpeg;base64,{img_base64}"
-        return img_data_url
+        self.result = f"data:image/jpeg;base64,{img_base64}"
+        return self.result
 
     def __repr__(self):
         return str(self.thumb.size)
@@ -38,7 +40,7 @@ def equals(set1, set2):
 
 MediaInfo = {}
 
-async def get_media_info():
+async def update_media_info():
     global MediaInfo
     localMediaInfo = {}
     manager = await MediaManager.request_async()
@@ -80,9 +82,18 @@ async def get_media_info():
         eel.update_media_info(answer)
 
 
+@eel.expose
+def get_media_info():
+    answer = copy.copy(MediaInfo)
+    if answer.get("thumbnail"):
+        loop = asyncio.get_event_loop()
+        answer["thumbnail"] = loop.run_until_complete(answer["thumbnail"].get())
+    eel.update_media_info(answer)
+
+
 async def addEventListeners():
     while True:
-        await get_media_info()
+        await update_media_info()
         await asyncio.sleep(3)
 
 def startBackgroundLoop():
