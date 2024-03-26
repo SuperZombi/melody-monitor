@@ -8,6 +8,8 @@ function checkMarquee(){
     }
 }
 window.onload=_=>{
+    load_params()
+    load_mods()
     eel.get_media_info()
 }
 
@@ -46,4 +48,23 @@ function update_media_info(info) {
     else{
         document.querySelector(".track-info").classList.remove("active")
     }
+}
+
+function load_params(){
+    const params = new URL(location.href).searchParams;
+    if (params.get("theme") == "dark"){
+        document.body.classList.add("dark")
+    }
+}
+
+async function load_mods(){
+    let files = await eel.get_mods_list()();
+    files.forEach(file=>{
+        if (file.endsWith(".css")){
+            let e = document.createElement("link")
+            e.rel = "stylesheet"
+            e.href = `mods/${file}`
+            document.head.appendChild(e)
+        }
+    })
 }

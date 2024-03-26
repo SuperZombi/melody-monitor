@@ -4,7 +4,9 @@ from winsdk.windows.storage.streams import DataReader, Buffer, InputStreamOption
 from infi.systray import SysTrayIcon
 from threading import Thread
 import webbrowser as wbr
+import socket
 import os, sys
+import shutil
 import asyncio
 import json
 import base64
@@ -12,11 +14,14 @@ import copy
 import eel
 
 
-HOST = "127.0.0.1"
-PORT = 8000
-INTERVAL = 3
+__version__ = "0.1.0"
+SETTINGS = {}
 
-__version__ = "0.0.1"
+
+def equals(set1, set2):
+    def serialize(cls):
+        return cls.__repr__()
+    return json.dumps(set1, default=serialize) == json.dumps(set2, default=serialize)
 
 
 class Thumbnail:
@@ -38,14 +43,6 @@ class Thumbnail:
 
     def __repr__(self):
         return str(self.thumb.size)
-
-
-def equals(set1, set2):
-    def serialize(cls):
-        return cls.__repr__()
-    return json.dumps(set1, default=serialize) == json.dumps(set2, default=serialize)
-
-
 
 MediaInfo = {}
 
@@ -103,26 +100,78 @@ def get_media_info():
 async def addEventListeners():
     while True:
         await update_media_info()
-        await asyncio.sleep(INTERVAL)
+        await asyncio.sleep(SETTINGS.get('interval'))
 
 def startBackgroundLoop():
     asyncio.run(addEventListeners())
 
 
+@eel.expose
+def get_mods_list():
+    if os.path.exists(resource_path(os.path.join("web", "mods"))):
+        return [f for f in os.listdir(resource_path(os.path.join("web", "mods")))]
+    return []
+
+
+#####
 def resource_path(relative_path):
     base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(base_path, relative_path)
 
+def exe_path(relative_path):
+    return os.path.join(os.getcwd(), relative_path)
+#####
+
+def load_settings():
+    global SETTINGS
+    with open(resource_path(os.path.join("data", "settings.json")), 'r', encoding='utf-8') as f:
+        SETTINGS = json.loads(f.read())
+
+    if os.path.exists(exe_path("settings.user.json")):
+        with open(exe_path("settings.user.json"), 'r', encoding='utf-8') as f:
+            user_settings = json.loads(f.read())
+            SETTINGS.update(user_settings)
+
+def load_mods():
+    if os.path.exists(resource_path(os.path.join("web", "mods"))):
+        shutil.rmtree(resource_path(os.path.join("web", "mods")))
+    if os.path.exists(exe_path("mods")):
+        shutil.copytree(exe_path("mods"), resource_path(os.path.join("web", "mods")))
+
+def open_browser(_):
+    host = SETTINGS.get('host')
+    if host == "0.0.0.0":
+        host = socket.gethostbyname(socket.gethostname())
+
+    search = []
+    if SETTINGS.get('theme') == "dark":
+        search.append("theme=dark")
+
+    search_str = ""
+    if len(search) > 0:
+        search_str = f"?{'&'.join(search)}"
+
+    wbr.open(f"http://{host}:{SETTINGS.get('port')}{search_str}")
+
+def open_settings(_):
+    if not os.path.exists(exe_path("settings.user.json")):
+        with open(exe_path("settings.user.json"), 'w', encoding='utf-8') as f:
+            f.write("{\n\t\n}")
+    os.startfile(exe_path("settings.user.json"))
+
 
 if __name__ == '__main__':
+    load_settings()
+    load_mods()
     eel.init(resource_path("web"))
 
     Thread(target=startBackgroundLoop, daemon=True).start()
 
     menu_options = (
-        ("Open in Browser", None, lambda _: wbr.open(f"http://{HOST}:{PORT}")),
+        ("Open in Browser", None, open_browser),
+        ("Settings", None, open_settings)
     )
-    systray = SysTrayIcon("music.ico", "Melody Monitor", menu_options, on_quit=lambda _: os._exit(0))
+    systray = SysTrayIcon(resource_path(os.path.join("data", "music.ico")), "Melody Monitor", menu_options, on_quit=lambda _: os._exit(0))
     systray.start()
 
-    eel.start("index.html", host=HOST, port=PORT, mode=None, close_callback=lambda a, b: None)
+    eel.start("index.html", host=SETTINGS.get('host'), port=SETTINGS.get('port'), mode=None, close_callback=lambda a, b: None)

@@ -1,0 +1,7 @@
+body.dark {
+    --background: rgba(20, 20, 20, 0.85);
+    --shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+    --title-text-color: white;
+    --artist-text-color: #ccc;
+    --progress-bar-background: #666;
+}
