@@ -5,6 +5,8 @@
 <img src="github/images/1.png" width="640px">
 <img src="github/images/2.png" width="640px">
 
+<a href="https://youtu.be/KKG3Twf2cX0"><img width="640px" src="github/images/youtube.jpg"></a>
+
 ## Installation
 1. Download archive from [Releases](https://github.com/SuperZombi/melody-monitor/releases)
 2. Unpack it to a place convenient for you.
