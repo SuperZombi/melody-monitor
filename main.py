@@ -1,13 +1,22 @@
 from winsdk.windows.media.control import GlobalSystemMediaTransportControlsSessionManager as MediaManager
 from winsdk.windows.media.control import GlobalSystemMediaTransportControlsSessionPlaybackStatus as PlayStatus
 from winsdk.windows.storage.streams import DataReader, Buffer, InputStreamOptions
+from infi.systray import SysTrayIcon
 from threading import Thread
+import webbrowser as wbr
 import os, sys
 import asyncio
 import json
 import base64
 import copy
 import eel
+
+
+HOST = "127.0.0.1"
+PORT = 8000
+INTERVAL = 3
+
+__version__ = "0.0.1"
 
 
 class Thumbnail:
@@ -94,7 +103,7 @@ def get_media_info():
 async def addEventListeners():
     while True:
         await update_media_info()
-        await asyncio.sleep(3)
+        await asyncio.sleep(INTERVAL)
 
 def startBackgroundLoop():
     asyncio.run(addEventListeners())
@@ -110,4 +119,10 @@ if __name__ == '__main__':
 
     Thread(target=startBackgroundLoop, daemon=True).start()
 
-    eel.start("index.html", mode="default")
+    menu_options = (
+        ("Open in Browser", None, lambda _: wbr.open(f"http://{HOST}:{PORT}")),
+    )
+    systray = SysTrayIcon("music.ico", "Melody Monitor", menu_options, on_quit=lambda _: os._exit(0))
+    systray.start()
+
+    eel.start("index.html", host=HOST, port=PORT, mode=None, close_callback=lambda a, b: None)
