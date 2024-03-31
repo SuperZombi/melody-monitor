@@ -14,7 +14,7 @@ import copy
 import eel
 
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 SETTINGS = {}
 
 
@@ -112,6 +112,13 @@ def get_mods_list():
         return [f for f in os.listdir(resource_path(os.path.join("web", "mods")))]
     return []
 
+@eel.expose
+def get_user_settings():
+    if os.path.exists(exe_path("settings.user.json")):
+        with open(exe_path("settings.user.json"), 'r', encoding='utf-8') as f:
+            return json.loads(f.read())
+    return {}
+
 
 #####
 def resource_path(relative_path):
@@ -138,26 +145,37 @@ def load_mods():
     if os.path.exists(exe_path("mods")):
         shutil.copytree(exe_path("mods"), resource_path(os.path.join("web", "mods")))
 
-def open_browser(_):
+
+######
+def generate_url():
     host = SETTINGS.get('host')
     if host == "0.0.0.0":
         host = socket.gethostbyname(socket.gethostname())
+    return f"http://{host}:{SETTINGS.get('port')}"
 
-    search = []
-    if SETTINGS.get('theme') == "dark":
-        search.append("theme=dark")
 
-    search_str = ""
-    if len(search) > 0:
-        search_str = f"?{'&'.join(search)}"
-
-    wbr.open(f"http://{host}:{SETTINGS.get('port')}{search_str}")
+#######
+def open_browser(_):
+    wbr.open(generate_url())
 
 def open_settings(_):
     if not os.path.exists(exe_path("settings.user.json")):
         with open(exe_path("settings.user.json"), 'w', encoding='utf-8') as f:
             f.write("{\n\t\n}")
     os.startfile(exe_path("settings.user.json"))
+
+def open_mods_folder(_):
+    if not os.path.exists(exe_path("mods")):
+        os.mkdir(exe_path("mods"))
+    os.startfile(exe_path("mods"))
+
+def open_mods_url(_):
+    wbr.open("https://github.com/SuperZombi/melody-monitor/tree/main/mods")
+
+def refresh_settings_mods(_):
+    load_settings()
+    load_mods()
+    eel.update_url(generate_url())
 
 
 if __name__ == '__main__':
@@ -169,7 +187,12 @@ if __name__ == '__main__':
 
     menu_options = (
         ("Open in Browser", None, open_browser),
-        ("Settings", None, open_settings)
+        ("Settings", None, (
+            ('Open Settings', None, open_settings),
+            ('Mods Folder', None, open_mods_folder),
+            ('Download Mods', None, open_mods_url),
+            ('Refresh', None, refresh_settings_mods)
+        ))
     )
     systray = SysTrayIcon(resource_path(os.path.join("data", "music.ico")), "Melody Monitor", menu_options, on_quit=lambda _: os._exit(0))
     systray.start()

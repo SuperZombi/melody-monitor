@@ -8,9 +8,11 @@ function checkMarquee(){
     }
 }
 window.onload=_=>{
-    load_params()
+    load_settings()
     load_mods()
-    eel.get_media_info()
+    setTimeout(_=>{
+        eel.get_media_info()
+    }, 1000)
 }
 
 eel.expose(update_media_info);
@@ -50,11 +52,11 @@ function update_media_info(info) {
     }
 }
 
-function load_params(){
-    const params = new URL(location.href).searchParams;
-    if (params.get("theme") == "dark"){
-        document.body.classList.add("dark")
-    }
+async function load_settings(){
+    let settings = await eel.get_user_settings()();
+    Object.entries(settings).forEach(([key, value]) => {
+        document.body.setAttribute(key, value)
+    })
 }
 
 async function load_mods(){
@@ -67,4 +69,9 @@ async function load_mods(){
             document.head.appendChild(e)
         }
     })
+}
+
+eel.expose(update_url);
+function update_url(url) {
+    window.location.href = url;
 }
