@@ -5,12 +5,12 @@
     <a href="#donate"><img src="https://shields.io/badge/💲-Support_the_Project-2ea043"></a>
 </p>
 
-#### Shows what's playing now.
+<img src="github/images/1.png" width="600px">
+<img src="github/images/2.png" width="600px">
 
-<img src="github/images/1.png" width="640px">
-<img src="github/images/2.png" width="640px">
+<a href="https://youtu.be/KKG3Twf2cX0"><img width="600px" src="github/images/youtube.jpg"></a>
 
-<a href="https://youtu.be/KKG3Twf2cX0"><img width="640px" src="github/images/youtube.jpg"></a>
+### ⚠️Works only on Windows⚠️
 
 ## Installation
 1. Download archive from [Releases](https://github.com/SuperZombi/melody-monitor/releases)
