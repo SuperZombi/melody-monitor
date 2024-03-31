@@ -1,0 +1,18 @@
+/*
+    Author: SuperZombi
+*/
+.track-image {
+    border-radius: 50%;
+    mask-image: radial-gradient(circle, transparent 15%, black 15%);
+    mask: radial-gradient(circle, transparent 15%, black 15%);
+    -webkit-mask: radial-gradient(circle, transparent 15%, black 15%);
+    animation: rotate 10s linear infinite;
+}
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
