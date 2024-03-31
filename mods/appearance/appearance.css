@@ -1,0 +1,55 @@
+/*
+    Author: SuperZombi
+*/
+body[appear="left"] .track-info{
+    transform: translateX(-100%);
+}
+body[appear="left"] .track-info.active{
+    transform: translateX(0);
+}
+
+body[appear="right"] .track-info{
+    transform: translateX(100%);
+}
+body[appear="right"] .track-info.active{
+    transform: translateX(0);
+}
+
+body[appear="top"] .track-info{
+    transform: translateY(-100%);
+}
+body[appear="top"] .track-info.active{
+    transform: translateX(0);
+}
+
+body[appear="bottom"] .track-info{
+    transform: translateY(100%);
+}
+body[appear="bottom"] .track-info.active{
+    transform: translateX(0);
+}
+
+body[appear="card-top"],
+body[appear="card-bottom"] {
+    perspective: 1000px;
+}
+body[appear="card-top"] .track-info,
+body[appear="card-bottom"] .track-info {
+    transform-style: preserve-3d;
+    transition: all 0.3s, transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    backface-visibility: hidden;
+}
+
+body[appear="card-top"] .track-info{
+    transform: rotateX(90deg);
+}
+body[appear="card-top"] .track-info.active{
+    transform: rotateX(0deg);
+}
+
+body[appear="card-bottom"] .track-info{
+    transform: rotateX(-90deg);
+}
+body[appear="card-bottom"] .track-info.active{
+    transform: rotateX(0deg);
+}
