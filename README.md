@@ -45,8 +45,8 @@ Specify `dark` if you want a dark theme
 <hr>
 
 
-## Changing accent colors
-If you want to add custom styling (for example, change accent colors), you need to create a `mods` folder next to the `melody-monitor.exe`.<br>
+## Changing accent color and Mods
+If you want to add custom styling (for example, change accent color), you need to create a `mods` folder next to the `melody-monitor.exe`.<br>
 Then create a file with any name ending in `.css`.<br>
 Hint for changing colors:
 ```css
@@ -59,6 +59,7 @@ body {
     --progress-bar-background: #bbb;
 }
 ```
+You can see community mods [here](mods).
 <hr>
 
 
