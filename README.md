@@ -18,7 +18,9 @@
 3. Run `melody-monitor.exe` (The program will start in the tray).
 4. Click `Open in Browser` and copy the link in your browser.
 5. Add a new source in OBS (Browser).
-6. Paste the copied link into the URL field and adjust the height and width of the element as required.
+6. Paste the copied link into the URL field
+7. Adjust the height and width of the element (recommended: height: 140px, width: 600px)
+8. Check the box "Refresh browser when source becomes active"
 
 ## Settings
 To change settings, create a file `settings.user.json` next to the `melody-monitor.exe`.<br>
