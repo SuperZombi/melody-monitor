@@ -29,6 +29,30 @@ body[appear="bottom"] .track-info.active{
     transform: translateX(0);
 }
 
+body[appear="mask-x"] .track-info,
+body[appear="mask-y"] .track-info {
+    mask: linear-gradient(#000 0%, #000 0%);
+    mask-position: center;
+    mask-repeat: no-repeat;
+    -webkit-mask: linear-gradient(#000 0%, #000 0%);
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    opacity: 1;
+}
+body[appear="mask-x"] .track-info{
+    mask-size: 0% 100%;
+    -webkit-mask-size: 0% 100%;
+}
+body[appear="mask-y"] .track-info{
+    mask-size: 100% 0%;
+    -webkit-mask-size: 100% 0%;
+}
+body[appear="mask-x"] .track-info.active,
+body[appear="mask-y"] .track-info.active {
+    mask-size: 100% 100%;
+    -webkit-mask-size: 100% 100%;
+}
+
 body[appear="card-top"],
 body[appear="card-bottom"] {
     perspective: 1000px;
@@ -37,6 +61,11 @@ body[appear="card-top"] .track-info,
 body[appear="card-bottom"] .track-info {
     transform-style: preserve-3d;
     transition: all 0.3s, transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    backface-visibility: hidden;
+    opacity: 1;
+}
+body[appear="card-top"] .track-image,
+body[appear="card-bottom"] .track-image {
     backface-visibility: hidden;
 }
 

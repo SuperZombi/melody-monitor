@@ -9,7 +9,7 @@
 4. Open `settings.user.json` and setup `appear` option.
 
 ### Supported options:
-[left](#left), [right](#right), [top](#top), [bottom](#bottom), [card-top](#card-top), [card-bottom](#card-bottom)
+[left](#left), [right](#right), [top](#top), [bottom](#bottom), [card-top](#card-top), [card-bottom](#card-bottom), [mask-x](#mask-x), [mask-y](#mask-y)
 <hr>
 
 ### Left
@@ -70,3 +70,21 @@
 }
 ```
 <img src="gifs/card-bottom.gif">
+
+### Mask-X
+
+```json
+{
+    "appear": "mask-x"
+}
+```
+<img src="gifs/mask-x.gif">
+
+### Mask-Y
+
+```json
+{
+    "appear": "mask-y"
+}
+```
+<img src="gifs/mask-y.gif">
