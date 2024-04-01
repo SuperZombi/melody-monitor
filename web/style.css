@@ -1,6 +1,7 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0; padding: 0;
+    overflow: hidden;
     --margin: 8px;
     --padding: 20px;
     --gap: 25px;
