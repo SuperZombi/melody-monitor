@@ -27,7 +27,7 @@ def exe_path(relative_path):
 
 notification = Notify(
     default_notification_title=f"Melody Monitor {__version__}",
-    default_application_name="Melody Monitor",
+    default_notification_application_name="Melody Monitor",
     default_notification_icon=resource_path(os.path.join("data", "music.ico"))
 )
 
