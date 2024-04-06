@@ -1,7 +1,6 @@
-from winsdk.windows.media.control import GlobalSystemMediaTransportControlsSessionManager as MediaManager
-from winsdk.windows.media.control import GlobalSystemMediaTransportControlsSessionPlaybackStatus as PlayStatus
-from winsdk.windows.storage.streams import DataReader, Buffer, InputStreamOptions
 from infi.systray import SysTrayIcon
+from notifypy import Notify
+from utils import Metadata, WindowsMediaInfo
 from threading import Thread
 import webbrowser as wbr
 import socket
@@ -9,92 +8,53 @@ import os, sys
 import shutil
 import asyncio
 import json
-import base64
 import copy
 import eel
 
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 SETTINGS = {}
 
+#####
+def resource_path(relative_path):
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
 
-def equals(set1, set2):
-    def serialize(cls):
-        return cls.__repr__()
-    return json.dumps(set1, default=serialize) == json.dumps(set2, default=serialize)
+def exe_path(relative_path):
+    return os.path.join(os.getcwd(), relative_path)
+#####
 
 
-class Thumbnail:
-    def __init__(self): pass
-    async def new(self, thumbnail):
-        self.thumb = await thumbnail.open_read_async()
-        self.result = None
-        return self
+notification = Notify(
+    default_notification_title=f"Melody Monitor {__version__}",
+    default_application_name="Melody Monitor",
+    default_notification_icon=resource_path(os.path.join("data", "music.ico"))
+)
 
-    async def get(self):
-        if self.result: return self.result
-        buffer = Buffer(self.thumb.size)
-        await self.thumb.read_async(buffer, buffer.capacity, InputStreamOptions.READ_AHEAD)
-        buffer_reader = DataReader.from_buffer(buffer)
-        byte_buffer = bytearray(buffer_reader.read_buffer(buffer.length))
-        img_base64 = base64.b64encode(byte_buffer).decode('utf-8')
-        self.result = f"data:image/jpeg;base64,{img_base64}"
-        return self.result
 
-    def __repr__(self):
-        return str(self.thumb.size)
+MediaInfo = Metadata()
 
-MediaInfo = {}
 
 async def update_media_info():
     global MediaInfo
-    localMediaInfo = {}
-    manager = await MediaManager.request_async()
+    systemManager = WindowsMediaInfo()
+    localMediaInfo = await systemManager.get_media_info()
 
-    active_sessions = list(
-        filter(lambda session: session.get_playback_info().playback_status == PlayStatus.PLAYING,
-        manager.get_sessions())
-    )
-    if len(active_sessions) > 0:
-        current_session = active_sessions[0]
-    else:
-        current_session = manager.get_current_session()
-    
-    if current_session:
-        playback_info = current_session.get_playback_info()
-        play_status = playback_info.playback_status
-        if play_status in [PlayStatus.PLAYING, PlayStatus.PAUSED]:
-            localMediaInfo["status"] = play_status.name
-
-            timeline_properties = current_session.get_timeline_properties()
-            localMediaInfo["current"] = int(timeline_properties.position.total_seconds())
-            localMediaInfo["total"] = int(timeline_properties.end_time.total_seconds())
-            
-            info = await current_session.try_get_media_properties_async()
-            localMediaInfo["artist"] = info.artist
-            localMediaInfo["title"] = info.title
-
-            thumbnail = info.thumbnail
-            if thumbnail:
-                localMediaInfo["thumbnail"] = await Thumbnail().new(thumbnail)
-
-    if not equals(localMediaInfo, MediaInfo):
+    if not localMediaInfo == MediaInfo:
         MediaInfo = localMediaInfo
-        print(MediaInfo)
-
         answer = copy.copy(localMediaInfo)
-        if answer.get("thumbnail"):
-            answer["thumbnail"] = await answer["thumbnail"].get()
-        eel.update_media_info(answer)
+        if answer.thumbnail:
+            answer.thumbnail = await answer.thumbnail.get()
+        eel.update_media_info(vars(answer))
 
 
 @eel.expose
 def get_media_info():
     answer = copy.copy(MediaInfo)
-    if answer.get("thumbnail"):
+    if answer.thumbnail:
         loop = asyncio.get_event_loop()
-        answer["thumbnail"] = loop.run_until_complete(answer["thumbnail"].get())
-    eel.update_media_info(answer)
+        answer.thumbnail = loop.run_until_complete(answer.thumbnail.get())
+    eel.update_media_info(vars(answer))
 
 
 async def addEventListeners():
@@ -116,17 +76,14 @@ def get_mods_list():
 def get_user_settings():
     if os.path.exists(exe_path("settings.user.json")):
         with open(exe_path("settings.user.json"), 'r', encoding='utf-8') as f:
-            return json.loads(f.read())
+            s = json.loads(f.read())
+            return dict(filter(
+                lambda x: x[0] not in ["host", "port", "interval"],
+                s.items()
+            ))
     return {}
 
 
-#####
-def resource_path(relative_path):
-    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
-    return os.path.join(base_path, relative_path)
-
-def exe_path(relative_path):
-    return os.path.join(os.getcwd(), relative_path)
 #####
 
 def load_settings():
@@ -136,8 +93,13 @@ def load_settings():
 
     if os.path.exists(exe_path("settings.user.json")):
         with open(exe_path("settings.user.json"), 'r', encoding='utf-8') as f:
-            user_settings = json.loads(f.read())
-            SETTINGS.update(user_settings)
+            try:
+                user_settings = json.loads(f.read())
+                SETTINGS.update(user_settings)
+            except json.decoder.JSONDecodeError as e:
+                notification.message = "Failed to load settings"
+                notification.send()
+                raise e
 
 def load_mods():
     if os.path.exists(resource_path(os.path.join("web", "mods"))):
@@ -196,5 +158,8 @@ if __name__ == '__main__':
     )
     systray = SysTrayIcon(resource_path(os.path.join("data", "music.ico")), "Melody Monitor", menu_options, on_quit=lambda _: os._exit(0))
     systray.start()
+
+    notification.message = f"Running at {generate_url()}"
+    notification.send()
 
     eel.start("index.html", host=SETTINGS.get('host'), port=SETTINGS.get('port'), mode=None, close_callback=lambda a, b: None)
