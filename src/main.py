@@ -4,6 +4,7 @@ from utils import Metadata, WindowsMediaInfo
 from threading import Thread
 import webbrowser as wbr
 import socket
+import platform
 import os, sys
 import shutil
 import asyncio
@@ -31,13 +32,17 @@ notification = Notify(
     default_notification_icon=resource_path(os.path.join("data", "music.ico"))
 )
 
-
 MediaInfo = Metadata()
+
+platform = platform.system().lower()
+if platform == "windows":
+    systemManager = WindowsMediaInfo()
+else:
+    raise OSError(f"UnsupportedPlatform: {platform}")
 
 
 async def update_media_info():
     global MediaInfo
-    systemManager = WindowsMediaInfo()
     localMediaInfo = await systemManager.get_media_info()
 
     if not localMediaInfo == MediaInfo:
