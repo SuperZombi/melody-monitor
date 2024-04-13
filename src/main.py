@@ -13,7 +13,7 @@ import copy
 import eel
 
 
-__version__ = "0.2.1"
+__version__ = "0.2.2"
 SETTINGS = {}
 
 #####
@@ -163,8 +163,5 @@ if __name__ == '__main__':
     )
     systray = SysTrayIcon(resource_path(os.path.join("data", "music.ico")), "Melody Monitor", menu_options, on_quit=lambda _: os._exit(0))
     systray.start()
-
-    notification.message = f"Running at {generate_url()}"
-    notification.send()
 
     eel.start("index.html", host=SETTINGS.get('host'), port=SETTINGS.get('port'), mode=None, close_callback=lambda a, b: None)

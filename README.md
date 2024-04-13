@@ -1,7 +1,7 @@
 # Melody Monitor for OBS
 
 <p align="right">
-    <img align="left" src="https://shields.io/badge/version-v0.2.1-blue">
+    <img align="left" src="https://shields.io/badge/version-v0.2.2-blue">
     <a href="#donate"><img src="https://shields.io/badge/💲-Support_the_Project-2ea043"></a>
 </p>
 
@@ -19,7 +19,7 @@
 4. Click `Open in Browser` and copy the link in your browser.
 5. Add a new source in OBS (Browser).
 6. Paste the copied link into the URL field
-7. Adjust the height and width of the element (recommended: height: 140px, width: 600px)
+7. Adjust the height and width of the element (recommended: height: 150px, width: 600px)
 8. Check the box "Refresh browser when source becomes active"
 
 ## Settings
