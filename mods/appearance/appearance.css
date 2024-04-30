@@ -77,7 +77,7 @@ body[appear="card-top"] .track-info.active{
 }
 
 body[appear="card-bottom"] .track-info{
-    transform: rotateX(-90deg);
+    transform: rotateX(-91deg);
 }
 body[appear="card-bottom"] .track-info.active{
     transform: rotateX(0deg);
