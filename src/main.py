@@ -1,6 +1,5 @@
 from infi.systray import SysTrayIcon
-from notifypy import Notify
-from utils import Metadata, WindowsMediaInfo
+from utils import *
 from threading import Thread
 import webbrowser as wbr
 import socket
@@ -13,8 +12,8 @@ import copy
 import eel
 
 
-__version__ = "0.2.2"
-SETTINGS = {}
+__version__ = "1.0.0"
+SETTINGS = None
 
 #####
 def resource_path(relative_path):
@@ -25,12 +24,6 @@ def exe_path(relative_path):
     return os.path.join(os.getcwd(), relative_path)
 #####
 
-
-notification = Notify(
-    default_notification_title=f"Melody Monitor {__version__}",
-    default_notification_application_name="Melody Monitor",
-    default_notification_icon=resource_path(os.path.join("data", "music.ico"))
-)
 
 MediaInfo = Metadata()
 
@@ -89,22 +82,43 @@ def get_user_settings():
     return {}
 
 
+@eel.expose
+def get_settings():
+    return SETTINGS.metadata
+
+
 #####
+
+
+def parse_config(data):
+    settings = []
+    for i in data:
+        settings.append(Setting(**i))
+    return settings
+
 
 def load_settings():
     global SETTINGS
-    with open(resource_path(os.path.join("data", "settings.json")), 'r', encoding='utf-8') as f:
-        SETTINGS = json.loads(f.read())
+    with open(resource_path(os.path.join("data", "settings.config.json")), 'r', encoding='utf-8') as f:
+        template = parse_config(json.loads(f.read()))
+        SETTINGS = SettingsManager(template)
 
     if os.path.exists(exe_path("settings.user.json")):
         with open(exe_path("settings.user.json"), 'r', encoding='utf-8') as f:
-            try:
-                user_settings = json.loads(f.read())
-                SETTINGS.update(user_settings)
-            except json.decoder.JSONDecodeError as e:
-                notification.message = "Failed to load settings"
-                notification.send()
-                raise e
+            user_settings = json.loads(f.read())
+            SETTINGS.load_settings(user_settings)
+
+
+@eel.expose
+def update_setting(name, value):
+    SETTINGS.set(name, value)
+
+@eel.expose
+def save_settings():
+    with open(exe_path("settings.user.json"), 'w', encoding='utf-8') as f:
+        f.write(json.dumps(SETTINGS.json(True), indent=4))
+    eel.update_url(generate_url())
+
 
 def load_mods():
     if os.path.exists(resource_path(os.path.join("web", "mods"))):
@@ -126,10 +140,7 @@ def open_browser(_):
     wbr.open(generate_url())
 
 def open_settings(_):
-    if not os.path.exists(exe_path("settings.user.json")):
-        with open(exe_path("settings.user.json"), 'w', encoding='utf-8') as f:
-            f.write("{\n\t\n}")
-    os.startfile(exe_path("settings.user.json"))
+    wbr.open(generate_url() + "/settings.html")
 
 def open_mods_folder(_):
     if not os.path.exists(exe_path("mods")):

@@ -6,6 +6,91 @@ from abc import ABC, abstractmethod
 import base64
 
 
+##############################################
+
+
+class Setting:
+    def __init__(self, name, label, type, dft_value=None, promt="", values=None, min=None):
+        self.name = name
+        self.label = label
+        if type in ["str", "int"]:
+            self.type = type
+        else:
+            raise ValueError(f"Type «{type}» is not supported")
+        if values and len(values) > 0:
+            self.values = SettingsManager([Setting(type=self.type, **i) for i in values])
+        else:
+            self.values = None
+        
+        self.dft_value = dft_value
+        self.value = dft_value
+        self.promt = promt
+        self.min = min
+
+    @property
+    def value(self):
+        return self._value
+    
+    @value.setter
+    def value(self, new_value):
+        if type(new_value).__name__ != self.type and new_value != None:
+            raise TypeError(f"{type(new_value).__name__}({new_value}) is not <{self.type}>")
+
+        if self.values:
+            if not hasattr(self.values, new_value):
+                raise ValueError(f"<{self.name}>: «{new_value}» is not in {list(self.values.json().keys())}")
+
+        self._value = new_value if new_value else self.dft_value
+            
+
+    @property
+    def metadata(self):
+        return {
+            "name": self.name,
+            "label": self.label,
+            "type": self.type,
+            "value": self.value,
+            **({"promt": self.promt} if self.promt != "" else {}),
+            **({"values": self.values.metadata} if self.values is not None else {}),
+            **({"dft_value": self.dft_value} if self.dft_value is not None else {}),
+            **({"min": self.min} if self.min is not None else {})
+        }
+
+    def __str__(self): return f"{self.name}={self.value}"
+    def __repr__(self): return str(self)
+
+
+class SettingsManager():
+    def __init__(self, template):
+        self.template = template
+        for i in template:
+            setattr(self, i.name, i)
+
+    def load_settings(self, data):
+        for k,v in data.items():
+            if hasattr(self, k):
+                obj = getattr(self, k)
+                obj.value = v
+
+    def set(self, name, new_value):
+        getattr(self, name).value = new_value
+    def get(self, name):
+        return getattr(self, name).value
+
+    def json(self, unique=False):
+        if unique:
+            return {obj.name: obj.value for obj in self.template if obj.dft_value != obj.value}
+        else:
+            return {obj.name: obj.value for obj in self.template}
+
+    @property
+    def metadata(self):
+        return list(i.metadata for i in self.template)
+
+
+##############################################
+
+
 class Thumbnail:
     async def __new__(cls, *a, **kw):
         instance = super().__new__(cls)

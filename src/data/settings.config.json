@@ -1,0 +1,33 @@
+[
+	{
+		"name": "host",
+		"label": "Host",
+		"dft_value": "127.0.0.1",
+		"type": "str"
+	},
+	{
+		"name": "port",
+		"label": "Port",
+		"dft_value": 8000,
+		"type": "int",
+		"min": 1
+	},
+	{
+		"name": "interval",
+		"label": "Polling interval",
+		"dft_value": 3,
+		"type": "int",
+		"min": 1,
+		"promt": "Indicates the delay between requests to the Media Player API"
+	},
+	{
+		"name": "theme",
+		"label": "Theme",
+		"values": [
+			{"name": "light", "label": "Light"},
+			{"name": "dark", "label": "Dark"}
+		],
+		"dft_value": "light",
+		"type": "str"
+	}
+]
