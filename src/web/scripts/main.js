@@ -29,7 +29,7 @@ function update_media_info(info) {
             document.querySelector("#trackImage").src = info.thumbnail
         }
         else{
-            document.querySelector("#trackImage").src = "disk.svg"
+            document.querySelector("#trackImage").src = document.querySelector("#trackImage").getAttribute("default")
         }
         if (info.total > 0){
             document.querySelector(".progress-bar").style.display = "block"
