@@ -21,7 +21,9 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 def exe_path(relative_path):
-    return os.path.join(os.getcwd(), relative_path)
+    if getattr(sys, 'frozen', False):
+        return os.path.join(os.path.dirname(sys.executable), relative_path)
+    return os.path.join(os.path.dirname(__file__), relative_path)
 #####
 
 
