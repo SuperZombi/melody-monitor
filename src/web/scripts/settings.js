@@ -135,10 +135,11 @@ function Mod(data){
 				</div>
 			</div>
 		</div>
-
-		<div class="accordion-collapse collapse">
-			<div class="accordion-body settings"></div>
-		</div>
+		${data.settings.length > 0 ? `
+			<div class="accordion-collapse collapse">
+				<div class="accordion-body settings d-flex flex-column gap-2"></div>
+			</div>
+		`:""}
 	`
 	if (data.settings.length > 0){
 		let settings = div.querySelector(".settings")

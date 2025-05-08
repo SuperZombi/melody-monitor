@@ -198,15 +198,9 @@ def open_browser(_):
     wbr.open(generate_url())
 
 def open_settings(_):
-    wbr.open(generate_url() + "/settings.html")
-
-def open_mods_folder(_):
     if not os.path.exists(exe_path("mods")):
         os.mkdir(exe_path("mods"))
-    os.startfile(exe_path("mods"))
-
-def open_mods_url(_):
-    wbr.open("https://github.com/SuperZombi/melody-monitor/tree/main/mods")
+    wbr.open(generate_url() + "/settings.html")
 
 def refresh_settings_mods(_):
     load_settings()
@@ -222,13 +216,9 @@ if __name__ == '__main__':
     Thread(target=startBackgroundLoop, daemon=True).start()
 
     menu_options = (
-        ("Open in Browser", None, open_browser),
-        ("Settings", None, (
-            ('Open Settings', None, open_settings),
-            ('Mods Folder', None, open_mods_folder),
-            ('Download Mods', None, open_mods_url),
-            ('Refresh', None, refresh)
-        ))
+        ("Open in Browser", os.path.join("data","browser.ico"), open_browser),
+        ("Settings", os.path.join("data","settings.ico"), open_settings),
+        ('Refresh', os.path.join("data","refresh.ico"), refresh)
     )
     systray = SysTrayIcon(resource_path(os.path.join("data", "music.ico")), "Melody Monitor", menu_options, on_quit=lambda _: os._exit(0))
     systray.start()
