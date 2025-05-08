@@ -1,0 +1,27 @@
+{
+	"id": "appearance",
+	"name": "Appearance",
+	"author": "Super Zombi",
+	"description": "Customize the appearance and disappearance of the card.",
+	"icon": "https://static.thenounproject.com/png/2102225-512.png",
+	"files": ["appearance.css"],
+	"settings": [
+		{
+			"name": "appear",
+			"label": "Animation",
+			"default": "none",
+			"type": "str",
+			"values": [
+				{"name": "none", "label": "Disable"},
+				{"name": "left", "label": "Left"},
+				{"name": "right", "label": "Right"},
+				{"name": "top", "label": "Top"},
+				{"name": "bottom", "label": "Bottom"},
+				{"name": "card-top", "label": "Card Top"},
+				{"name": "card-bottom", "label": "Card Bottom"},
+				{"name": "mask-x", "label": "Mask X"},
+				{"name": "mask-y", "label": "Mask Y"}
+			]
+		}
+	]
+}
