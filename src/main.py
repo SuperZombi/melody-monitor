@@ -10,6 +10,7 @@ import asyncio
 import json
 import copy
 import eel
+import time
 
 
 __version__ = "1.0.0"
@@ -44,15 +45,30 @@ async def update_media_info():
 
     if not localMediaInfo == MediaInfo:
         MediaInfo = localMediaInfo
+        systemManager.last_update = int(time.time())
         answer = copy.copy(localMediaInfo)
         if answer.thumbnail:
             answer.thumbnail = await answer.thumbnail.get()
         eel.update_media_info(vars(answer))
+    else:
+        if MediaInfo.status == "PLAYING":
+            diff = int(time.time()) - getattr(systemManager, "last_update", 0)
+            if diff > 0 and MediaInfo.current + diff < MediaInfo.total:
+                answer = copy.copy(localMediaInfo)
+                answer.current = MediaInfo.current + diff
+                if answer.thumbnail:
+                    answer.thumbnail = await answer.thumbnail.get()
+                eel.update_media_info(vars(answer))
 
 
 @eel.expose
 def get_media_info():
     answer = copy.copy(MediaInfo)
+    if MediaInfo.status == "PLAYING":
+        diff = int(time.time()) - getattr(systemManager, "last_update", 0)
+        if diff > 0 and MediaInfo.current + diff < MediaInfo.total:
+            answer.current = MediaInfo.current + diff
+
     if answer.thumbnail:
         loop = asyncio.get_event_loop()
         answer.thumbnail = loop.run_until_complete(answer.thumbnail.get())
