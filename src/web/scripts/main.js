@@ -60,7 +60,7 @@ async function load_settings(){
 }
 
 async function load_mods(){
-    let files = await eel.get_mods_list()();
+    let files = await eel.get_mods_files()();
     files.forEach(file=>{
         if (file.endsWith(".css")){
             let e = document.createElement("link")
@@ -68,6 +68,10 @@ async function load_mods(){
             e.href = `mods/${file}`
             document.head.appendChild(e)
         }
+    })
+    let mods_settings = await eel.get_mods_settings()();
+    Object.entries(mods_settings).forEach(([key, value]) => {
+        document.body.setAttribute(key, value)
     })
 }
 

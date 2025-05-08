@@ -4,6 +4,10 @@ from winsdk.windows.storage.streams import DataReader, Buffer, InputStreamOption
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
 import base64
+import os
+import zipfile
+import json
+import shutil
 
 
 ##############################################
@@ -86,6 +90,80 @@ class SettingsManager():
     @property
     def metadata(self):
         return list(i.metadata for i in self.template)
+
+
+class Mod:
+    def __init__(self, id, name, files, settings=None, author="", icon="", description=""):
+        self.id = id
+        self.name = name
+        self.author = author
+        self.description = description
+        self.icon = icon
+        self.files = files
+        self.settings = [Setting(**x) for x in settings] if settings else []
+        self.enable = True
+
+    def get_settings(self):
+        return {
+            "enable": self.enable,
+            "settings": {seti.name: seti.value for seti in self.settings}
+        }
+
+    def update_settings(self, user_settings):
+        self.enable = user_settings["enable"]
+        for key,val in user_settings["settings"].items():
+            target = next((x for x in self.settings if x.name == key), None)
+            target.value = val
+
+    @property
+    def metadata(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "author": self.author,
+            "icon": self.icon,
+            "enable": self.enable,
+            "description": self.description,
+            "settings": [x.metadata for x in self.settings]
+        }
+
+class ModLoader:
+    def __init__(self, path):
+        self.path = path
+
+        if os.path.isdir(path):
+            self.is_zip = False
+        elif os.path.isfile(path) and path.endswith(".zip"):
+            self.is_zip = True
+        else:
+            raise ValueError("Failed to find meta file")
+
+        self.meta = self.load_meta()
+        if not self.meta: raise ValueError("Failed to load meta info")
+
+    def load_meta(self):
+        if self.is_zip:
+            with zipfile.ZipFile(self.path, 'r') as zf:
+                if 'meta.json' in zf.namelist():
+                    with zf.open("meta.json") as file:
+                        return json.loads(file.read().decode("utf-8"))
+        else:
+            meta_file = os.path.join(self.path, "meta.json")
+            if os.path.exists(meta_file):
+                with open(meta_file, 'r', encoding="utf-8") as file:
+                    return json.loads(file.read())
+
+    def copy_files(self, dest):
+        if self.is_zip:
+            with zipfile.ZipFile(self.path, 'r') as zf:
+                for file in self.meta.get("files", list()):
+                    if file in zf.namelist():
+                        zf.extract(file, path=dest)
+        else:
+            for filename in self.meta.get("files", list()):
+                file = os.path.join(self.path, filename)
+                if os.path.exists(file):
+                    shutil.copy(file, dest)
 
 
 ##############################################
