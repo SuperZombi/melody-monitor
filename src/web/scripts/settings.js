@@ -63,8 +63,8 @@ function Setting(data){
 
 	let input = input_area.children[0]
 	input.name = data.name
-	if (data.dft_value){
-		input.placeholder = data.dft_value
+	if (data.default){
+		input.placeholder = data.default
 	}
 	if (data.value){
 		input.value = data.value

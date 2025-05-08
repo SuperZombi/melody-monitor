@@ -10,7 +10,7 @@ import base64
 
 
 class Setting:
-    def __init__(self, name, label, type, dft_value=None, promt="", values=None, min=None):
+    def __init__(self, name, label, type, default=None, promt="", values=None, min=None):
         self.name = name
         self.label = label
         if type in ["str", "int"]:
@@ -22,8 +22,8 @@ class Setting:
         else:
             self.values = None
         
-        self.dft_value = dft_value
-        self.value = dft_value
+        self.default = default
+        self.value = default
         self.promt = promt
         self.min = min
 
@@ -40,7 +40,7 @@ class Setting:
             if not hasattr(self.values, new_value):
                 raise ValueError(f"<{self.name}>: «{new_value}» is not in {list(self.values.json().keys())}")
 
-        self._value = new_value if new_value else self.dft_value
+        self._value = new_value if new_value else self.default
             
 
     @property
@@ -52,7 +52,7 @@ class Setting:
             "value": self.value,
             **({"promt": self.promt} if self.promt != "" else {}),
             **({"values": self.values.metadata} if self.values is not None else {}),
-            **({"dft_value": self.dft_value} if self.dft_value is not None else {}),
+            **({"default": self.default} if self.default is not None else {}),
             **({"min": self.min} if self.min is not None else {})
         }
 
@@ -79,7 +79,7 @@ class SettingsManager():
 
     def json(self, unique=False):
         if unique:
-            return {obj.name: obj.value for obj in self.template if obj.dft_value != obj.value}
+            return {obj.name: obj.value for obj in self.template if obj.default != obj.value}
         else:
             return {obj.name: obj.value for obj in self.template}
 
