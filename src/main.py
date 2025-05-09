@@ -237,9 +237,9 @@ if __name__ == '__main__':
     Thread(target=startBackgroundLoop, daemon=True).start()
 
     menu_options = (
-        ("Open in Browser", os.path.join("data","browser.ico"), open_browser),
-        ("Settings", os.path.join("data","settings.ico"), open_settings),
-        ('Refresh', os.path.join("data","refresh.ico"), refresh)
+        ("Open in Browser", resource_path(os.path.join("data", "browser.ico")), open_browser),
+        ("Settings", resource_path(os.path.join("data", "settings.ico")), open_settings),
+        ('Refresh', resource_path(os.path.join("data", "refresh.ico")), refresh)
     )
     systray = SysTrayIcon(resource_path(os.path.join("data", "music.ico")), "Melody Monitor", menu_options, on_quit=lambda _: os._exit(0))
     systray.start()
