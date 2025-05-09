@@ -37,6 +37,9 @@ body{
 #mods .card{
 	width: 40vw;
 }
+#mods .card:has(input[name="enable"]:checked){
+	order: -1;
+}
 #mods .card-title{
 	margin-bottom: 0;
 }

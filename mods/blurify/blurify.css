@@ -26,8 +26,8 @@
     color: white;
 }
 .track-author{
-    -webkit-text-stroke: thin rgba(0, 0, 0, 0.6);
-    color: #ddd;
+    filter: drop-shadow(0 0 2px black);
+    color: #eee;
 }
 .progress-bar{
     filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.4));

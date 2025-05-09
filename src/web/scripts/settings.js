@@ -126,7 +126,7 @@ function Mod(data){
 			</div>
 			<div class="col-md-2 gap-2 center" style="justify-content: flex-end;">
 				${data.settings.length > 0 ? `
-					<button type="button" class="btn btn-outline-secondary settings_button">
+					<button class="btn btn-outline-secondary settings_button">
 						<i class="bi bi-gear-fill"></i>
 					</button>
 				` : ""}
