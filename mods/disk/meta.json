@@ -1,0 +1,30 @@
+{
+	"id": "disk",
+	"name": "Disk",
+	"author": "Super Zombi",
+	"description": "Makes the track image look like a disk.",
+	"icon": "https://static.thenounproject.com/png/disk-icon-7583974-512.png",
+	"files": ["disk.css"],
+	"settings": [
+		{
+			"name": "disk_hole",
+			"label": "Hole in disk",
+			"default": "true",
+			"type": "str",
+			"values": [
+				{"name": "true", "label": "Yes"},
+				{"name": "false", "label": "No"}
+			]
+		},
+		{
+			"name": "disk_rotate",
+			"label": "Rotation",
+			"default": "true",
+			"type": "str",
+			"values": [
+				{"name": "true", "label": "Yes"},
+				{"name": "false", "label": "No"}
+			]
+		}
+	]
+}

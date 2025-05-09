@@ -29,7 +29,7 @@ function update_media_info(info) {
             document.querySelector("#trackImage").src = info.thumbnail
         }
         else{
-            document.querySelector("#trackImage").src = "disk.svg"
+            document.querySelector("#trackImage").src = document.querySelector("#trackImage").getAttribute("default")
         }
         if (info.total > 0){
             document.querySelector(".progress-bar").style.display = "block"
@@ -60,7 +60,7 @@ async function load_settings(){
 }
 
 async function load_mods(){
-    let files = await eel.get_mods_list()();
+    let files = await eel.get_mods_files()();
     files.forEach(file=>{
         if (file.endsWith(".css")){
             let e = document.createElement("link")
@@ -68,6 +68,10 @@ async function load_mods(){
             e.href = `mods/${file}`
             document.head.appendChild(e)
         }
+    })
+    let mods_settings = await eel.get_mods_settings()();
+    Object.entries(mods_settings).forEach(([key, value]) => {
+        document.body.setAttribute(key, value)
     })
 }
 

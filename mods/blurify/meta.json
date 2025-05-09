@@ -1,0 +1,8 @@
+{
+	"id": "blurify",
+	"name": "Blurify",
+	"author": "Super Zombi",
+	"icon": "https://static.thenounproject.com/png/blur-icon-7709425-512.png",
+	"description": "Makes the current track's cover blurry.",
+	"files": ["blurify.css"]
+}

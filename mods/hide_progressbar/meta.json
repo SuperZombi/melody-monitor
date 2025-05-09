@@ -1,0 +1,7 @@
+{
+	"id": "hide_progressbar",
+	"name": "Hide progress bar",
+	"author": "Super Zombi",
+	"icon": "https://www.svgrepo.com/show/389587/interface-ui-loading-progress-bar.svg",
+	"files": ["hide_progress.css"]
+}

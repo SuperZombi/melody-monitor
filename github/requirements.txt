@@ -1,0 +1,4 @@
+winsdk
+infi.systray
+asyncio
+eel
