@@ -154,6 +154,7 @@ class ModLoader:
                     return json.loads(file.read())
 
     def copy_files(self, dest):
+        os.makedirs(dest, exist_ok=True)
         if self.is_zip:
             with zipfile.ZipFile(self.path, 'r') as zf:
                 for file in self.meta.get("files", list()):

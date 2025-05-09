@@ -86,8 +86,13 @@ def startBackgroundLoop():
 
 @eel.expose
 def get_mods_files():
-    if os.path.exists(resource_path(os.path.join("web", "mods"))):
-        return [f for f in os.listdir(resource_path(os.path.join("web", "mods")))]
+    mods_folder = resource_path(os.path.join("web", "mods"))
+    if os.path.exists(mods_folder):
+        files = []
+        for root, _, filenames in os.walk(mods_folder):
+            for filename in filenames:
+                files.append(os.path.relpath(os.path.join(root,filename), mods_folder))
+        return files
     return []
 
 @eel.expose
@@ -198,7 +203,7 @@ def load_mods():
             MODS.append(mod)
 
             if MODS_SETTINGS[mod.id]["enable"]:
-                loader.copy_files(mods_folder)
+                loader.copy_files(os.path.join(mods_folder, mod.id))
 
 
 ######
