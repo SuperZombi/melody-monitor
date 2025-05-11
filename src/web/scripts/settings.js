@@ -18,22 +18,41 @@ async function saveSettings(){
 		if (input.type == "number"){
 			value = input.valueAsNumber
 		}
+		else if (input.type == "checkbox"){
+			value = input.checked
+		}
+		else if (input.type == "color"){
+			value = input.getAttribute("data-value")
+		}
 		await eel.update_setting(input.name, value)
 	})
 	let mods = document.querySelectorAll("#mods .card")
 	mods.forEach(async mod=>{
 		let mod_id = mod.getAttribute("id")
 		let enable = mod.querySelector("input[name=enable]").checked
-		let settings = {}
+		let attrs = {}
+		let vars = {}
 		mod.querySelectorAll(".settings .input-group").forEach(seti=>{
 			let input = seti.querySelector("input, select")
 			let value = input.value
 			if (input.type == "number"){
 				value = input.valueAsNumber
 			}
-			settings[input.name] = value
+			else if (input.type == "checkbox"){
+				value = input.checked
+			}
+			else if (input.type == "color"){
+				value = input.getAttribute("data-value")
+			}
+			let namespace = input.getAttribute("namespace")
+			if (namespace == "attr"){
+				attrs[input.name] = value
+			}
+			else if (namespace == "var"){
+				vars[input.name] = value
+			}
 		})
-		await eel.update_mod_setting(mod_id, enable, settings)()
+		await eel.update_mod_setting(mod_id, enable, attrs, vars)()
 	})
 	await eel.save_settings()
 	await eel.save_mods_settings()
@@ -65,8 +84,8 @@ function Setting(data){
 	div.className = "row"
 	div.innerHTML = `
 		<label class="col-sm-4 col-form-label">${data.label}</label>
-		<div class="col">
-			<div class="input-group"></div>
+		<div class="col d-flex">
+			<div class="input-group h-100 align-items-center"></div>
 		</div>
 	`
 	let input_area = div.querySelector(".input-group")
@@ -88,19 +107,51 @@ function Setting(data){
 			<input type="number" class="form-control" ${data.min ? `min="${data.min}"` : ''}>
 		`
 	}
+	else if (data.type == "bool"){
+		input_area.innerHTML = `
+			<input type="checkbox" class="form-check-input mt-0 me-2">
+		`
+	}
+	else if (data.type == "color"){
+		input_area.innerHTML = `
+			<input type="color" class="form-control form-control-color">
+		`
+		let canc = document.createElement("i")
+		canc.className = "bi bi-x-circle-fill cancel ms-3"
+		input_area.parentElement.appendChild(canc)
+	}
 
 	let input = input_area.querySelector("input, select")
 	input.name = data.name
-	if (data.default){
+	input.setAttribute("namespace", data.namespace)
+	if (data.default && (input.type == "text" || input.type == "number")){
 		input.placeholder = data.default
 	}
 	if (data.value){
-		input.value = data.value
+		if (input.type == "checkbox"){
+			input.checked = data.value
+		}
+		else if (input.type == "color"){
+			input.value = data.value
+			input.setAttribute("data-value", data.value)
+		}
+		else {
+			input.value = data.value
+		}
+	}
+	if (data.type == "color"){
+		input.onchange = _=>{
+			input.setAttribute("data-value", input.value)
+		}
+		input_area.parentElement.querySelector(".cancel").onclick = _=>{
+			input.value = ""
+			input.setAttribute("data-value", "")
+		}
 	}
 
 	if (data.promt){
 		let span = document.createElement("span")
-		span.className = "input-group-text help"
+		span.className = "input-group-text help h-100"
 		span.title = data.promt
 		span.innerHTML = `<i class="bi bi-question-circle"></i>`
 		input_area.appendChild(span)

@@ -14,22 +14,28 @@ import shutil
 
 
 class Setting:
-    def __init__(self, name, label, type, default=None, promt="", values=None, min=None):
+    def __init__(self, name, label, type, default=None, promt="", namespace="attr", values=None, min=None):
         self.name = name
         self.label = label
-        if type in ["str", "int"]:
+        if type in ["str", "int", "bool", "color"]:
             self.type = type
         else:
             raise ValueError(f"Type «{type}» is not supported")
+
+        if namespace in ["attr", "var"]:
+            self.namespace = namespace
+        else:
+            raise ValueError(f"Namespace «{namespace}» is not supported")
+
         if values and len(values) > 0:
             self.values = SettingsManager([Setting(type=self.type, **i) for i in values])
         else:
             self.values = None
         
+        self.min = min
         self.default = default
         self.value = default
         self.promt = promt
-        self.min = min
 
     @property
     def value(self):
@@ -37,14 +43,22 @@ class Setting:
     
     @value.setter
     def value(self, new_value):
-        if type(new_value).__name__ != self.type and new_value != None:
+        if self.type == "color":
+            if not (new_value == None or new_value == ""):
+                if type(new_value).__name__ != "str" or not new_value.startswith("#"):
+                    raise ValueError(f"<{new_value}> color should starts from #")
+
+        elif type(new_value).__name__ != self.type and new_value != None:
             raise TypeError(f"{type(new_value).__name__}({new_value}) is not <{self.type}>")
 
         if self.values:
             if not hasattr(self.values, new_value):
                 raise ValueError(f"<{self.name}>: «{new_value}» is not in {list(self.values.json().keys())}")
 
-        self._value = new_value if new_value else self.default
+        if self.min and new_value < self.min:
+            raise ValueError(f"<{self.name}>: {new_value} is less than allowed {self.min}")
+
+        self._value = new_value if (new_value != "" or new_value != None) else self.default
             
 
     @property
@@ -53,6 +67,7 @@ class Setting:
             "name": self.name,
             "label": self.label,
             "type": self.type,
+            "namespace": self.namespace,
             "value": self.value,
             **({"promt": self.promt} if self.promt != "" else {}),
             **({"values": self.values.metadata} if self.values is not None else {}),
@@ -93,27 +108,28 @@ class SettingsManager():
 
 
 class Mod:
-    def __init__(self, id, name, files, settings=None, author="", icon="", description=""):
+    def __init__(self, id, name, files=None, settings=None, author="", icon="", description=""):
         self.id = id
         self.name = name
         self.author = author
         self.description = description
         self.icon = icon
-        self.files = files
+        self.files = files or []
         self.settings = [Setting(**x) for x in settings] if settings else []
         self.enable = True
 
     def get_settings(self):
         return {
             "enable": self.enable,
-            "settings": {seti.name: seti.value for seti in self.settings}
+            "settings": {seti.name: seti.value for seti in self.settings if seti.namespace == "attr"},
+            "vars": {seti.name: seti.value for seti in self.settings if seti.namespace == "var"}
         }
 
     def update_settings(self, user_settings):
         self.enable = user_settings["enable"]
-        for key,val in user_settings["settings"].items():
+        for key,val in [*user_settings["settings"].items(), *user_settings["vars"].items()]:
             target = next((x for x in self.settings if x.name == key), None)
-            target.value = val
+            if target: target.value = val
 
     @property
     def metadata(self):

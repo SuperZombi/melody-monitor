@@ -54,8 +54,11 @@ function update_media_info(info) {
 
 async function load_settings(){
     let settings = await eel.get_user_settings()();
-    Object.entries(settings).forEach(([key, value]) => {
+    Object.entries(settings.attrs).forEach(([key, value]) => {
         document.body.setAttribute(key, value)
+    })
+    Object.entries(settings.vars).forEach(([key, value]) => {
+        document.body.style.setProperty(`--${key}`, value);
     })
 }
 
@@ -70,8 +73,11 @@ async function load_mods(){
         }
     })
     let mods_settings = await eel.get_mods_settings()();
-    Object.entries(mods_settings).forEach(([key, value]) => {
+    Object.entries(mods_settings.attrs).forEach(([key, value]) => {
         document.body.setAttribute(key, value)
+    })
+    Object.entries(mods_settings.vars).forEach(([key, value]) => {
+        document.body.style.setProperty(`--${key}`, value);
     })
 }
 

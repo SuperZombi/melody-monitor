@@ -98,23 +98,27 @@ def get_mods_files():
 
 @eel.expose
 def get_mods_settings():
-    temp = {}
+    attrs = {}
+    vars = {}
     for key,val in MODS_SETTINGS.items():
         if val["enable"]:
-            temp = {**temp, **val["settings"]}
-    return temp
+            attrs = {**attrs, **val.get("settings", dict())}
+            vars = {**vars, **val.get("vars", dict())}
+    return {"attrs": attrs, "vars": vars}
 
 
 @eel.expose
 def get_user_settings():
-    if os.path.exists(exe_path("settings.user.json")):
-        with open(exe_path("settings.user.json"), 'r', encoding='utf-8') as f:
-            s = json.loads(f.read())
-            return dict(filter(
-                lambda x: x[0] not in ["host", "port", "interval"],
-                s.items()
-            ))
-    return {}
+    attrs = {}
+    vars = {}
+    for seti in SETTINGS.metadata:
+        if seti["name"] in ["host", "port", "interval"]:
+            continue
+        if seti["namespace"] == "attr":
+            attrs[seti["name"]] = seti["value"]
+        elif seti["namespace"] == "var":
+            vars[seti["name"]] = seti["value"]
+    return {"attrs": attrs, "vars": vars}
 
 
 @eel.expose
@@ -158,10 +162,11 @@ def update_setting(name, value):
     SETTINGS.set(name, value)
 
 @eel.expose
-def update_mod_setting(mod_id, enable, settings):
+def update_mod_setting(mod_id, enable, attrs, vars):
     global MODS_SETTINGS
     MODS_SETTINGS[mod_id]["enable"] = enable
-    MODS_SETTINGS[mod_id]["settings"] = settings
+    MODS_SETTINGS[mod_id]["settings"] = attrs
+    MODS_SETTINGS[mod_id]["vars"] = vars
 
 @eel.expose
 def save_settings():

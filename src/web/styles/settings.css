@@ -90,3 +90,10 @@ i.bi{
 	top: 0; right: 0;
 	margin: 1rem;
 }
+i.cancel{
+	cursor: pointer;
+	transition: 0.2s;
+}
+i.cancel:hover{
+	color: red;
+}
