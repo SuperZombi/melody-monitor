@@ -35,7 +35,7 @@ body{
 #mods_store .img-fluid{
 	max-height: 100px;
 	min-height: 75px;
-	filter: drop-shadow(0 0 3px rgb(255,255,255,0.3));
+	filter: drop-shadow(0 0 2px rgb(255,255,255,0.2));
 }
 #mods .card{
 	width: 40vw;

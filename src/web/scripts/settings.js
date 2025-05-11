@@ -156,21 +156,23 @@ function Mod(data){
 	`
 	let del_but = delete_area.querySelector("button")
 	del_but.onclick = async _=>{
-		del_but.disabled = true
-		del_but.innerHTML = `
-			<span class="spinner-border spinner-border-sm"></span>
-		`
-		let success = await eel.remove_mod(data.id)()
-		setTimeout(async _=>{
-			del_but.disabled = false
-			if (success){
-				await eel.refresh()
-				div.remove()
-			} else {
-				del_but.innerHTML = "Delete"
-				alert("Error")
-			}
-		}, 250)
+		if (confirm(`Delete mod "${data.name}"?`)){
+			del_but.disabled = true
+			del_but.innerHTML = `
+				<span class="spinner-border spinner-border-sm"></span>
+			`
+			let success = await eel.remove_mod(data.id)()
+			setTimeout(async _=>{
+				del_but.disabled = false
+				if (success){
+					await eel.refresh()
+					div.remove()
+				} else {
+					del_but.innerHTML = "Delete"
+					alert("Error")
+				}
+			}, 250)
+		}
 	}
 	settings.appendChild(delete_area)
 
