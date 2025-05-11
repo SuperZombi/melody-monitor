@@ -19,5 +19,16 @@
 		"author": "Super Zombi",
 		"description": "Makes the track image look like a disk.",
 		"icon": "https://github.com/SuperZombi/melody-monitor/raw/refs/heads/main/mods/disk/icon.svg"
+	},
+	{
+		"id": "hide_progressbar",
+		"name": "Hide progress bar",
+		"author": "Super Zombi",
+		"icon": "https://github.com/SuperZombi/melody-monitor/raw/refs/heads/main/mods/hide_progressbar/icon.svg"
+	},
+	{
+		"id": "custom",
+		"name": "Custom colors",
+		"icon": "https://raw.githubusercontent.com/SuperZombi/melody-monitor/refs/heads/main/mods/custom/icon.png"
 	}
 ]

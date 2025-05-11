@@ -1,6 +1,6 @@
 {
 	"id": "custom",
 	"name": "Custom colors",
-	"icon": "https://images.icon-icons.com/91/PNG/512/color_wheel_16443.png",
+	"icon": "https://raw.githubusercontent.com/SuperZombi/melody-monitor/refs/heads/main/mods/custom/icon.png",
 	"files": ["custom.css"]
 }
