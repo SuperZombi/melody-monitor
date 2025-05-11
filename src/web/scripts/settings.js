@@ -53,6 +53,7 @@ async function buildSettings(){
 async function buildMods(){
 	let mods = await eel.get_mods()();
 	let parent = document.querySelector("#mods")
+	parent.innerHTML = ""
 	mods.forEach(s=>{
 		let el = Mod(s)
 		parent.appendChild(el)
@@ -112,8 +113,9 @@ function Mod(data){
 	let div = document.createElement("div")
 	div.className = "card"
 	div.setAttribute("id", data.id)
+	data.enable ? div.style.order = "-1" : null
 	div.innerHTML = `
-		<div class="row g-0">
+		<div class="row g-0 px-3 py-2">
 			<div class="col-md-3 center">
 				<img src="${data.icon}" class="img-fluid rounded">
 			</div>
@@ -125,30 +127,140 @@ function Mod(data){
 				</div>
 			</div>
 			<div class="col-md-2 gap-2 center" style="justify-content: flex-end;">
-				${data.settings.length > 0 ? `
-					<button class="btn btn-outline-secondary settings_button">
-						<i class="bi bi-gear-fill"></i>
-					</button>
-				` : ""}
+				<button class="btn btn-outline-secondary settings_button">
+					<i class="bi bi-gear-fill"></i>
+				</button>
 				<div class="form-switch">
 					<input class="form-check-input" type="checkbox" name="enable" role="switch"${data.enable?' checked':''}>
 				</div>
 			</div>
 		</div>
-		${data.settings.length > 0 ? `
-			<div class="accordion-collapse collapse">
-				<div class="accordion-body settings d-flex flex-column gap-2"></div>
-			</div>
-		`:""}
+		<div class="accordion-collapse collapse">
+			<div class="accordion-body settings d-flex flex-column gap-2 p-3"></div>
+		</div>
 	`
-	if (data.settings.length > 0){
-		let settings = div.querySelector(".settings")
-		data.settings.forEach(s=>{
-			let el = Setting(s)
-			settings.appendChild(el)
-		})
-		let colapse = new bootstrap.Collapse(div.querySelector(".accordion-collapse"), {toggle: false})
-		div.querySelector(".settings_button").onclick = _=>{colapse.toggle()}
+	let settings = div.querySelector(".settings")
+	data.settings.forEach(s=>{
+		let el = Setting(s)
+		el.querySelector(".col-form-label").classList.replace("col-sm-4", "col-sm-3")
+		settings.appendChild(el)
+	})
+
+	let delete_area = document.createElement("div")
+	delete_area.className = "row"
+	delete_area.innerHTML = `
+		<label class="col-sm-3"></label>
+		<div class="col">
+			<button class="btn btn-danger w-75${data.settings.length > 0 ? " mt-2":""}">Delete</button>
+		</div>
+	`
+	let del_but = delete_area.querySelector("button")
+	del_but.onclick = async _=>{
+		del_but.disabled = true
+		del_but.innerHTML = `
+			<span class="spinner-border spinner-border-sm"></span>
+		`
+		let success = await eel.remove_mod(data.id)()
+		setTimeout(async _=>{
+			del_but.disabled = false
+			if (success){
+				await eel.refresh()
+				div.remove()
+			} else {
+				del_but.innerHTML = "Delete"
+				alert("Error")
+			}
+		}, 250)
 	}
+	settings.appendChild(delete_area)
+
+	let colapse = new bootstrap.Collapse(div.querySelector(".accordion-collapse"), {toggle: false})
+	div.querySelector(".settings_button").onclick = _=>{colapse.toggle()}
 	return div
+}
+
+async function closeModsStore(){
+	document.querySelector("#mods_store").classList.remove("show")
+	document.body.style.overflow = '';
+	await eel.refresh()
+	buildMods()
+}
+async function openModsStore(){
+	document.querySelector("#mods_store").classList.add("show")
+	document.body.style.overflow = 'hidden';
+	let parent = document.querySelector("#mods_store .content")
+	parent.innerHTML = ""
+	let data = await eel.mods_store()()
+	let installed = await eel.get_mods()();
+	data.forEach(mod=>{
+		let div = document.createElement("div")
+		div.className = "card"
+		installed.some(obj => obj.id == mod.id) ? null : div.style.order = "-1"
+		div.innerHTML = `
+			<div class="row g-0 py-2">
+				<div class="col-md-3 center">
+					<img src="${mod.icon}" class="img-fluid rounded">
+				</div>
+				<div class="col-md-6 center">
+					<div class="card-body">
+						<h5 class="card-title${mod.description || mod.author ? ' mb-2':''}">${mod.name}</h5>
+						${mod.description ? `<div class="card-text">${mod.description}</div>`:''}
+						${mod.author ? `<small class="text-body-secondary">${mod.author}</small>`:''}
+					</div>
+				</div>
+				<div class="col-md-3 center">
+					${installed.some(obj => obj.id == mod.id) ? `
+						<button class="btn btn-danger action">Remove</button>
+					` : `
+						<button class="btn btn-primary action">Install</button>
+					`
+					}
+				</div>
+			</div>
+		`
+		let action = div.querySelector(".action")
+		async function install_mod(){
+			action.className = "btn btn-primary"
+			action.disabled = true
+			action.innerHTML = `
+				<span class="spinner-border spinner-border-sm"></span>
+			`
+			let success = await eel.install_mod(mod.id)()
+			action.disabled = false
+			if (success){
+				action.className = "btn btn-danger"
+				action.innerHTML = "Remove"
+				action.onclick = remove_mod
+			} else {
+				action.className = "btn btn-primary"
+				action.innerHTML = "Install"
+				alert("Error")
+			}
+		}
+		async function remove_mod(){
+			action.disabled = true
+			action.innerHTML = `
+				<span class="spinner-border spinner-border-sm"></span>
+			`
+			let success = await eel.remove_mod(mod.id)()
+			setTimeout(_=>{
+				action.disabled = false
+				if (success){
+					action.className = "btn btn-primary"
+					action.innerHTML = "Install"
+					action.onclick = install_mod
+				} else {
+					action.innerHTML = "Remove"
+					alert("Error")
+				}
+			}, 250)
+		}
+		
+		if (installed.some(obj => obj.id == mod.id)){
+			action.onclick = remove_mod
+		} else {
+			action.onclick = install_mod
+		}
+		parent.appendChild(div)
+	})
 }

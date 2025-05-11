@@ -11,6 +11,7 @@ import json
 import copy
 import eel
 import time
+import requests
 
 
 __version__ = "1.0.0"
@@ -204,6 +205,50 @@ def load_mods():
 
             if MODS_SETTINGS[mod.id]["enable"]:
                 loader.copy_files(os.path.join(mods_folder, mod.id))
+
+
+@eel.expose
+def mods_store():
+    try:
+        r = requests.get('https://raw.githubusercontent.com/SuperZombi/melody-monitor/refs/heads/main/mods/all.json')
+        if r.ok:
+            mods_info = json.loads(r.content.decode())
+            return mods_info
+    except: pass
+    return []
+
+@eel.expose
+def install_mod(mod_id):
+    mods_folder = exe_path("mods")
+    if not os.path.exists(mods_folder): os.makedirs(mods_folder)
+    target_file = os.path.join(mods_folder, f"{mod_id}.zip")
+    if os.path.exists(target_file): return False
+    url = f"https://github.com/SuperZombi/melody-monitor/raw/refs/heads/main/mods/{mod_id}/{mod_id}.zip"
+    try:
+        r = requests.get(url)
+        if r.ok:
+            with open(target_file, 'wb') as f:
+                f.write(r.content)
+            return True
+    except: pass
+
+@eel.expose
+def remove_mod(mod_id):
+    global MODS_SETTINGS
+    def remove_settings():
+        if mod_id in MODS_SETTINGS.keys():
+            del MODS_SETTINGS[mod_id]
+            save_mods_settings()
+    target_file = os.path.join(exe_path("mods"), f"{mod_id}.zip")
+    if os.path.exists(target_file):
+        os.remove(target_file)
+        remove_settings()
+        return True
+    target_folder = os.path.join(exe_path("mods"), mod_id)
+    if os.path.exists(target_folder):
+        shutil.rmtree(target_folder)
+        remove_settings()
+        return True
 
 
 ######

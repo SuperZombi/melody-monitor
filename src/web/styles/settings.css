@@ -25,20 +25,20 @@ body{
 	gap: 1rem;
 	min-height: min-content;
 }
-#mods .center{
+#mods .center,
+#mods_store .center{
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
-#mods .img-fluid{
-	max-height: 128px;
+#mods .img-fluid,
+#mods_store .img-fluid{
+	max-height: 100px;
 	min-height: 75px;
+	filter: drop-shadow(0 0 3px rgb(255,255,255,0.3));
 }
 #mods .card{
 	width: 40vw;
-}
-#mods .card:has(input[name="enable"]:checked){
-	order: -1;
 }
 #mods .card-title{
 	margin-bottom: 0;
@@ -46,8 +46,8 @@ body{
 #mods .settings_button{
 	border: none;
 }
-#mods .settings{
-	padding: 1rem;
+#mods .settings .col-form-label{
+	text-align: center;
 }
 #save{
 	padding-left: 50px;
@@ -63,4 +63,30 @@ i.bi{
 }
 .help{
 	cursor: help;
+}
+
+#mods_store{
+	background: inherit;
+	position: fixed;
+	inset: 0;
+	display: none;
+	padding: 1rem;
+}
+#mods_store.show{
+	display: block;
+}
+#mods_store .content{
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	width: 50%;
+	height: calc(100% - 50px);
+	margin: auto;
+	overflow: auto;
+	padding: 1rem 0.5rem;
+}
+#mods_store .btn-close{
+	position: absolute;
+	top: 0; right: 0;
+	margin: 1rem;
 }

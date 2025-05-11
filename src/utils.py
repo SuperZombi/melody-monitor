@@ -136,10 +136,10 @@ class ModLoader:
         elif os.path.isfile(path) and path.endswith(".zip"):
             self.is_zip = True
         else:
-            raise ValueError("Failed to find meta file")
+            raise ValueError(f"[{os.path.basename(path)}] Invalid mod type")
 
         self.meta = self.load_meta()
-        if not self.meta: raise ValueError("Failed to load meta info")
+        if not self.meta: raise ValueError(f"[{os.path.basename(path)}] Failed to load meta")
 
     def load_meta(self):
         if self.is_zip:
@@ -152,6 +152,8 @@ class ModLoader:
             if os.path.exists(meta_file):
                 with open(meta_file, 'r', encoding="utf-8") as file:
                     return json.loads(file.read())
+            else:
+                raise ValueError(f"[{os.path.basename(self.path)}] Meta file don't exists")
 
     def copy_files(self, dest):
         os.makedirs(dest, exist_ok=True)

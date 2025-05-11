@@ -3,3 +3,4 @@ infi.systray
 asyncio
 pyinstaller
 eel
+requests
