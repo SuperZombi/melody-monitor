@@ -2,5 +2,36 @@
 	"id": "custom",
 	"name": "Custom colors",
 	"icon": "https://raw.githubusercontent.com/SuperZombi/melody-monitor/refs/heads/main/mods/custom/icon.png",
-	"files": ["custom.css"]
+	"settings": [
+		{
+			"name": "background",
+			"label": "Card color",
+			"type": "color",
+			"namespace": "var"
+		},
+		{
+			"name": "progress-bar-color",
+			"label": "Progress bar",
+			"type": "color",
+			"namespace": "var"
+		},
+		{
+			"name": "progress-bar-background",
+			"label": "Progress background",
+			"type": "color",
+			"namespace": "var"
+		},
+		{
+			"name": "title-text-color",
+			"label": "Track name",
+			"type": "color",
+			"namespace": "var"
+		},
+		{
+			"name": "artist-text-color",
+			"label": "Track artist",
+			"type": "color",
+			"namespace": "var"
+		}
+	]
 }

@@ -9,22 +9,14 @@
 		{
 			"name": "disk_hole",
 			"label": "Hole in disk",
-			"default": "true",
-			"type": "str",
-			"values": [
-				{"name": "true", "label": "Yes"},
-				{"name": "false", "label": "No"}
-			]
+			"default": true,
+			"type": "bool"
 		},
 		{
 			"name": "disk_rotate",
 			"label": "Rotation",
-			"default": "true",
-			"type": "str",
-			"values": [
-				{"name": "true", "label": "Yes"},
-				{"name": "false", "label": "No"}
-			]
+			"default": true,
+			"type": "bool"
 		}
 	]
 }
