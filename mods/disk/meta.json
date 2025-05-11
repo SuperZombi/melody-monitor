@@ -3,7 +3,7 @@
 	"name": "Disk",
 	"author": "Super Zombi",
 	"description": "Makes the track image look like a disk.",
-	"icon": "https://static.thenounproject.com/png/disk-icon-7583974-512.png",
+	"icon": "https://github.com/SuperZombi/melody-monitor/raw/refs/heads/main/mods/disk/icon.svg",
 	"files": ["disk.css"],
 	"settings": [
 		{

@@ -3,7 +3,7 @@
 	"name": "Appearance",
 	"author": "Super Zombi",
 	"description": "Customize the appearance and disappearance of the card.",
-	"icon": "https://static.thenounproject.com/png/2102225-512.png",
+	"icon": "https://github.com/SuperZombi/melody-monitor/raw/refs/heads/main/mods/appearance/icon.svg",
 	"files": ["appearance.css"],
 	"settings": [
 		{

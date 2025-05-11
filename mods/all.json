@@ -4,13 +4,13 @@
 		"name": "Appearance",
 		"author": "Super Zombi",
 		"description": "Customize the appearance and disappearance of the card.",
-		"icon": "https://static.thenounproject.com/png/2102225-512.png"
+		"icon": "https://github.com/SuperZombi/melody-monitor/raw/refs/heads/main/mods/appearance/icon.svg"
 	},
 	{
 		"id": "blurify",
 		"name": "Blurify",
 		"author": "Super Zombi",
-		"icon": "https://static.thenounproject.com/png/blur-icon-7709425-512.png",
+		"icon": "https://github.com/SuperZombi/melody-monitor/raw/refs/heads/main/mods/blurify/icon.svg",
 		"description": "Makes the current track's cover blurry."
 	},
 	{
@@ -18,6 +18,6 @@
 		"name": "Disk",
 		"author": "Super Zombi",
 		"description": "Makes the track image look like a disk.",
-		"icon": "https://static.thenounproject.com/png/disk-icon-7583974-512.png"
+		"icon": "https://github.com/SuperZombi/melody-monitor/raw/refs/heads/main/mods/disk/icon.svg"
 	}
 ]
