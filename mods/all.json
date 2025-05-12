@@ -29,6 +29,7 @@
 	{
 		"id": "custom",
 		"name": "Custom colors",
+		"author": "Super Zombi",
 		"icon": "https://raw.githubusercontent.com/SuperZombi/melody-monitor/refs/heads/main/mods/custom/icon.png"
 	}
 ]
