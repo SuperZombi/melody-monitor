@@ -1,0 +1,15 @@
+.track-info{
+    --background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(10px);
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyAQMAAAAk8RryAAAABlBMVEV1dXWOjo7X8DfEAAAAAnRSTlNAQPA2w60AAAGbSURBVBjTAZABb/4A1WFEiFeFwADNvmG00AAAALoRfxUKbUAATYcUQvOrAACIuodU3jmAAH/S/QAhEgAAItV06dbTwABdm6kWn4/AABp6Lu2dK0AAg98w2mgVAABIrABYVuQAALlIotHv4sAARoQsjP3JAADy6z2dzRgAAGmgVFGXhcAALS+IVtlmAADwHy2xk7CAAJtTohiZ84AAuK0cgkcxQACktMn+I3lAAA/53KlFy8AANtUfpeQBgABGRW66AelAADqrGGp4YwAArDmKF50ZQADmbCRaXuGAAGZj46VM20AAqJnMAQgigAAO00j06dZAAFWrQCEWmgAAHv4tTu2YQAAwm30o2mkAALTA34BYUYAA6teyStHHgAAkigJ6huOAACg/RfmyLIAAyMgPV0A9AAAwiu4JkXWAAKeGMpETOwAAC7x3z97mwABKJz5EYoYAAAXdhfvxQEAAohecmX89wACl8QrbLMEAAG5D/EbyuQAAfK6q8qEkwACK1bpnhakAABfxUaYgTsAA97KslkNwwABLMrm1awBAqJKlr5KGY+cAAAAASUVORK5CYII=);
+}
+[theme="dark"] .track-info{
+    --background: rgba(20, 20, 20, 0.75);
+}
+
+.progress-bar{
+    --progress-bar-background: rgb(0, 0, 0, 0.25);
+}
+.progress-bar .progress{
+    background: color-mix(in srgb, var(--progress-bar-color) 75%, transparent);
+}

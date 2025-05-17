@@ -1,0 +1,7 @@
+{
+	"id": "acrylic",
+	"name": "Acrylic",
+	"author": "Super Zombi",
+	"icon": "https://github.com/SuperZombi/melody-monitor/raw/refs/heads/main/mods/acrylic/icon.png",
+	"files": ["acrylic.css"]
+}
