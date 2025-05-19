@@ -16,14 +16,6 @@ body{
 }
 #main{
 	text-align: center;
-	overflow-y: auto;
-	overflow-x: hidden;
-	width: 50%;
-	max-width: 500px;
-	display: flex;
-	flex-direction: column;
-	gap: 1rem;
-	min-height: min-content;
 }
 #mods .center,
 #mods_store .center{
