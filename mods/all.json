@@ -27,10 +27,10 @@
 		"icon": "https://github.com/SuperZombi/melody-monitor/raw/refs/heads/main/mods/disk/icon.svg"
 	},
 	{
-		"id": "hide_progressbar",
-		"name": "Hide progress bar",
+		"id": "progressbar",
+		"name": "Progress bar",
 		"author": "Super Zombi",
-		"icon": "https://github.com/SuperZombi/melody-monitor/raw/refs/heads/main/mods/hide_progressbar/icon.svg"
+		"icon": "https://github.com/SuperZombi/melody-monitor/raw/refs/heads/main/mods/progressbar/icon.svg"
 	},
 	{
 		"id": "custom",

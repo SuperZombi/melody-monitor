@@ -1,0 +1,28 @@
+[progressbar_style="hidden"] .progress-bar{
+	display: none !important;
+}
+
+[progressbar_style="modern"] .track-details{
+	padding: 0.5em;
+}
+[progressbar_style="modern"] .progress-bar {
+	height: 0.2em;
+	overflow: unset;
+}
+[progressbar_style="modern"] .progress {
+	position: relative;
+	border-radius: inherit;
+}
+[progressbar_style="modern"] .progress::before {
+	content: '';
+	position: absolute;
+	right: 0;
+	top: 50%;
+	transform: translateY(-50%) translateX(50%);
+	width: 0.75em;
+	height: 0.75em;
+	line-height: 0.75em;
+	background: var(--progress-bar-color);
+	border-radius: 50%;
+	box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
