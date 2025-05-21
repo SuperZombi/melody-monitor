@@ -82,6 +82,9 @@ body {
 .track-author {
     font-size: 1em;
     color: var(--artist-text-color);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 .progress-bar {
     width: 100%;
@@ -95,6 +98,7 @@ body {
     height: 100%;
     background: var(--progress-bar-color);
 }
+.progress-bar.hide,
 [display_progressbar="false"] .progress-bar{
     display: none;
 }
