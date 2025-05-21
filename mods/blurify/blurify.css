@@ -29,6 +29,10 @@
     filter: drop-shadow(0 0 2px black);
     color: #eee;
 }
+.time{
+    filter: drop-shadow(0 0 2px black);
+    color: #eee;
+}
 .progress-bar{
     filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.4));
     --progress-bar-background: rgb(0, 0, 0, 0.2);

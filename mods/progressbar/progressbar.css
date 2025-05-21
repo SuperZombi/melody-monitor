@@ -1,19 +1,15 @@
-[progressbar_style="hidden"] .progress-bar{
-	display: none !important;
-}
-
-[progressbar_style="modern"] .track-details{
+.track-details{
 	padding: 0.5em;
 }
-[progressbar_style="modern"] .progress-bar {
+.progress-bar {
 	height: 0.2em;
 	overflow: unset;
 }
-[progressbar_style="modern"] .progress {
+.progress {
 	position: relative;
 	border-radius: inherit;
 }
-[progressbar_style="modern"] .progress::before {
+.progress::before {
 	content: '';
 	position: absolute;
 	right: 0;

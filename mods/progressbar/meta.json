@@ -1,20 +1,7 @@
 {
 	"id": "progressbar",
-	"name": "Progress bar",
+	"name": "Modern Progressbar",
 	"author": "Super Zombi",
 	"icon": "https://github.com/SuperZombi/melody-monitor/raw/refs/heads/main/mods/progressbar/icon.svg",
-	"files": ["progressbar.css"],
-	"settings": [
-		{
-			"name": "progressbar_style",
-			"label": "Progress style",
-			"default": "none",
-			"type": "str",
-			"values": [
-				{"name": "none", "label": "Default"},
-				{"name": "modern", "label": "Modern"},
-				{"name": "hidden", "label": "Hide"}
-			]
-		}
-	]
+	"files": ["progressbar.css"]
 }

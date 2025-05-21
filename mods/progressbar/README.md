@@ -1,4 +1,4 @@
-# Progress bar
+# Modern Progressbar
 
 ### Author: [SuperZombi](https://github.com/SuperZombi)
 
