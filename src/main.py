@@ -86,6 +86,21 @@ def startBackgroundLoop():
 
 
 @eel.expose
+def check_updates():
+    try:
+        r = requests.get('https://api.github.com/repos/SuperZombi/melody-monitor/releases/latest')
+        if r.ok:
+            remote_version = Version(r.json()['tag_name'])
+            current_version = Version(__version__)
+            if remote_version > current_version:
+                return {
+                    "current": str(current_version),
+                    "new": str(remote_version)
+                }
+    except: None
+
+
+@eel.expose
 def get_mods_files():
     mods_folder = resource_path(os.path.join("web", "mods"))
     if os.path.exists(mods_folder):

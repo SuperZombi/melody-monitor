@@ -3,6 +3,16 @@ window.onload = async _=>{
 	await buildSettings()
 	await buildMods()
 	document.querySelectorAll('[title]').forEach(el => new bootstrap.Tooltip(el))
+	let update = await eel.check_updates()()
+	if (update){
+		Modal("Update available!", [{
+			text: "Download",
+			action: modal=>{
+				window.open("https://github.com/SuperZombi/melody-monitor/releases", '_blank').focus()
+				modal.hide()
+			}
+		}])
+	}
 }
 
 function updateTheme() {
@@ -207,7 +217,7 @@ function Mod(data){
 	`
 	let del_but = delete_area.querySelector("button")
 	del_but.onclick = async _=>{
-		if (confirm(`Delete mod "${data.name}"?`)){
+		if (await customConfirm(`Delete mod "${data.name}"?`)){
 			del_but.disabled = true
 			del_but.innerHTML = `
 				<span class="spinner-border spinner-border-sm"></span>
@@ -220,7 +230,7 @@ function Mod(data){
 					div.remove()
 				} else {
 					del_but.innerHTML = "Delete"
-					alert("Error")
+					Modal(`Error while deleting mod "${data.name}"`)
 				}
 			}, 250)
 		}
@@ -287,7 +297,7 @@ async function openModsStore(){
 			} else {
 				action.className = "btn btn-primary"
 				action.innerHTML = "Install"
-				alert("Error")
+				Modal(`Error while installing mod "${mod.name}"`)
 			}
 		}
 		async function remove_mod(){
@@ -304,7 +314,7 @@ async function openModsStore(){
 					action.onclick = install_mod
 				} else {
 					action.innerHTML = "Remove"
-					alert("Error")
+					Modal(`Error while deleting mod "${mod.name}"`)
 				}
 			}, 250)
 		}
@@ -315,5 +325,52 @@ async function openModsStore(){
 			action.onclick = install_mod
 		}
 		parent.appendChild(div)
+	})
+}
+
+function Modal(text, actions=null){
+	let modelEl = document.querySelector("#main-modal")
+	modelEl.querySelector("[modal-text]").innerText = text;
+	modelEl.querySelector(".custom-actions").innerHTML = ""
+	modelEl.querySelector("[main-action]").classList.remove("d-none")
+	let modal = new bootstrap.Modal(modelEl)
+	if (actions){
+		modelEl.querySelector("[main-action]").classList.add("d-none")
+		actions.forEach(action=>{
+			let button = document.createElement("button")
+			button.className = "btn btn-primary"
+			button.innerText = action.text
+			button.onclick = _=>{action.action(modal)}
+			modelEl.querySelector(".custom-actions").appendChild(button)
+		})
+	}
+	modal.show()
+}
+function customConfirm(message) {
+	return new Promise((resolve) => {
+		let modalEl = document.querySelector('#confirm-modal')
+		modalEl.querySelector("[modal-text]").innerText = message
+		let modal = new bootstrap.Modal(modalEl)
+
+		let yesBtn = modalEl.querySelector('.btn-yes')
+		let noBtn = modalEl.querySelector('.btn-no')
+
+		let cleanup = () => {
+			yesBtn.removeEventListener('click', onYes)
+			noBtn.removeEventListener('click', onNo)
+		}
+		let onYes = () => {
+			cleanup()
+			modal.hide()
+			resolve(true)
+		}
+		let onNo = () => {
+			cleanup()
+			modal.hide()
+			resolve(false)
+		}
+		yesBtn.addEventListener('click', onYes)
+		noBtn.addEventListener('click', onNo)
+		modal.show()
 	})
 }

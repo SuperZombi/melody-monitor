@@ -10,6 +10,16 @@ import json
 import shutil
 
 
+class Version:
+    def __init__(self, version:str):
+        self.version_str = version
+        self.version_arr = version.split('.')
+        self.version_value = int("".join(self.version_arr))
+    def __str__(self):return self.version_str
+    def __repr__(self):return str(self)
+    def __lt__(self, other): return self.version_value < other
+    def __gt__(self, other): return self.version_value > other
+
 ##############################################
 
 
