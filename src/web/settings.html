@@ -18,12 +18,12 @@
     </div>
     <div>
         <h3 align="center" class="mt-2 mb-3">Mods</h3>
-        <div id="mods" class="d-flex flex-column gap-3"></div>
         <div style="text-align:center;">
-            <button class="btn btn-success mt-3" onclick="openModsStore()">Mods store</button>
+            <button class="btn btn-success mb-3" onclick="openModsStore()">Mods store</button>
         </div>
+        <div id="mods" class="d-flex flex-column gap-3"></div>
     </div>
-    <div>
+    <div class="bottom_area">
         <button class="btn btn-primary" id="save" onclick="saveSettings()">Save</button>
     </div>
 
@@ -32,5 +32,7 @@
         <button class="btn-close" onclick="closeModsStore()"></button>
         <div class="content"></div>
     </div>
+
+    <div class="fake-bottom"></div>
 </body>
 </html>
