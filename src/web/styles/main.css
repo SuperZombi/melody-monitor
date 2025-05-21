@@ -88,10 +88,26 @@ body {
     height: 0.625em;
     background: var(--progress-bar-background);
     border-radius: 8px;
-    margin-top: 20px;
+    margin-top: 1em;
     overflow: hidden;
 }
 .progress {
     height: 100%;
     background: var(--progress-bar-color);
+}
+[display_progressbar="false"] .progress-bar{
+    display: none;
+}
+
+.time {
+    color: var(--artist-text-color);
+    display: flex;
+    justify-content: space-between;
+    font-size: 1em;
+    font-family: 'Consolas', monospace;
+    margin-top: 0.5em;
+}
+.time.hide,
+[display_time="false"] .time{
+    display: none;
 }

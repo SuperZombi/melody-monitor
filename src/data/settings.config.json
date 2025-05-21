@@ -29,5 +29,17 @@
 		],
 		"default": "light",
 		"type": "str"
+	},
+	{
+		"name": "display_progressbar",
+		"label": "Display progressbar",
+		"type": "bool",
+		"default": true
+	},
+	{
+		"name": "display_time",
+		"label": "Display time",
+		"type": "bool",
+		"default": true
 	}
 ]
