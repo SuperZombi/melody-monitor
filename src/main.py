@@ -51,6 +51,16 @@ async def update_media_info():
         if answer.thumbnail:
             answer.thumbnail = await answer.thumbnail.get()
         eel.update_media_info(vars(answer))
+    else:
+        if MediaInfo.status == "PLAYING":
+            diff = int(time.time()) - getattr(systemManager, "last_update", 0)
+            if diff > 0 and MediaInfo.current + diff < MediaInfo.total:
+                answer = copy.copy(localMediaInfo)
+                answer.current = MediaInfo.current + diff
+                if answer.thumbnail:
+                    answer.thumbnail = await answer.thumbnail.get()
+                eel.update_media_info(vars(answer))
+
 
 @eel.expose
 def get_media_info():
