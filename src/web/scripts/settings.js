@@ -266,7 +266,11 @@ async function openModsStore(){
 				</div>
 				<div class="col-md-6 center">
 					<div class="card-body">
-						<h5 class="card-title${mod.description || mod.author ? ' mb-2':''}">${mod.name}</h5>
+						<h5 class="card-title${mod.description || mod.author ? ' mb-2':''}">
+							<a href="https://github.com/SuperZombi/melody-monitor/tree/main/mods/${mod.id}" target="_blank">
+								${mod.name}
+							</a>
+						</h5>
 						${mod.description ? `<div class="card-text">${mod.description}</div>`:''}
 						${mod.author ? `<small class="text-body-secondary">${mod.author}</small>`:''}
 					</div>

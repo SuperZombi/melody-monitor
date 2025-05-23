@@ -92,11 +92,19 @@ i.bi{
 	margin: auto;
 	overflow: auto;
 	padding: 1rem 0.5rem;
+	scrollbar-width: thin;
 }
 #mods_store .btn-close{
 	position: absolute;
 	top: 0; right: 0;
 	margin: 1rem;
+}
+#mods_store a[href]{
+	color: inherit;
+	text-decoration: none;
+}
+#mods_store a[href]:hover{
+	text-decoration: underline;
 }
 i.cancel{
 	cursor: pointer;
