@@ -270,6 +270,28 @@ def remove_mod(mod_id):
         remove_settings()
         return True
 
+@eel.expose
+def create_new_mod(data):
+    mod_folder = os.path.join(exe_path("mods"), data.get("id"))
+    if os.path.exists(mod_folder): return False
+    
+    os.makedirs(mod_folder)
+    css_file = os.path.join(mod_folder, f"{data.get('id')}.css")
+    shutil.copyfile(resource_path(os.path.join("data", "mod_template.css")), css_file)
+
+    with open(os.path.join(mod_folder, "meta.json"), 'w', encoding="utf-8") as f:
+        f.write(json.dumps({
+            "id": data.get("id"),
+            "name": data.get("name"),
+            "author": data.get("author", ""),
+            "description": data.get("description", ""),
+            "icon": "",
+            "files": [f"{data.get('id')}.css"]
+        }, ensure_ascii=False, indent=4))
+
+    os.startfile(mod_folder)
+    return True
+
 
 ######
 def generate_url():

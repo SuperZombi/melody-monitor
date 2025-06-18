@@ -342,11 +342,14 @@ async function openModsStore(){
 }
 
 function openNewModDialog(){
+	document.querySelectorAll("#new-mod-form input, #new-mod-form textarea").forEach(input=>{
+		input.value = ""
+	})
 	let modal = new bootstrap.Modal(document.querySelector('#new-mod-modal'))
 	modal.show()
 	document.querySelector('#new-mod-modal')
 }
-function createNewMod(){
+async function createNewMod(){
 	let inputs = document.querySelectorAll("#new-mod-form input, #new-mod-form textarea")
 	for (let input of inputs) {
 		if (!input.checkValidity()){
@@ -356,9 +359,14 @@ function createNewMod(){
 	let result = Object.fromEntries(
 		Array.from(inputs).map(el => [el.name, el.value])
 	)
-	console.log(result)
+	let done = await eel.create_new_mod(result)()
+	if (done){
+		await eel.refresh()
+		buildMods()
+	} else {
+		Modal(`Failed to create mod "${result.id}"`)
+	}
 }
-
 
 function Modal(text, actions=null){
 	let modelEl = document.querySelector("#main-modal")
