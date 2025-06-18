@@ -363,6 +363,7 @@ async function createNewMod(){
 	if (done){
 		await eel.refresh()
 		buildMods()
+		document.querySelector("#new-mod-modal [data-bs-dismiss]").click()
 	} else {
 		Modal(`Failed to create mod "${result.id}"`)
 	}
