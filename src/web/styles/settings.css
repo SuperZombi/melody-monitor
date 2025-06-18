@@ -113,3 +113,13 @@ i.cancel{
 i.cancel:hover{
 	color: red;
 }
+
+.empty{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.5rem;
+	border: 2px dashed;
+	border-radius: 10px;
+	padding: 4rem 3rem;
+}

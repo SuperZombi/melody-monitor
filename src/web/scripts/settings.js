@@ -83,10 +83,19 @@ async function buildMods(){
 	let mods = await eel.get_mods()();
 	let parent = document.querySelector("#mods")
 	parent.innerHTML = ""
-	mods.forEach(s=>{
-		let el = Mod(s)
-		parent.appendChild(el)
-	})
+	if (mods.length > 0){
+		mods.forEach(s=>{
+			let el = Mod(s)
+			parent.appendChild(el)
+		})
+	} else {
+		parent.innerHTML = `
+			<div class="empty" style="font-size:1.2rem">
+				<span>You don't have any mods installed.</span>
+				<code>¯\\_(ツ)_/¯</code>
+			</div>
+		`
+	}
 }
 
 function Setting(data){
