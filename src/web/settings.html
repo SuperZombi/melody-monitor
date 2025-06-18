@@ -18,8 +18,9 @@
     </div>
     <div>
         <h3 align="center" class="mt-2 mb-3">Mods</h3>
-        <div style="text-align:center;">
-            <button class="btn btn-success mb-3" onclick="openModsStore()">Mods store</button>
+        <div class="d-flex justify-content-center gap-2 mb-3">
+            <button class="btn btn-primary" onclick="openModsStore()">Mods store</button>
+            <button type="button" class="btn btn-success" data-toggle="tooltip" title="Create New" onclick="openNewModDialog()"><i class="bi bi-plus"></i></button>
         </div>
         <div id="mods" class="d-flex flex-column gap-3"></div>
     </div>
@@ -59,6 +60,38 @@
                 <div class="modal-footer border-0">
                     <button class="btn px-4 btn-secondary btn-no">No</button>
                     <button class="btn px-4 btn-danger btn-yes">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="new-mod-modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title">New Mod</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body d-flex flex-column gap-3" id="new-mod-form">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" placeholder="ID" name="id" required>
+                        <label>ID</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" name="name" placeholder="Name" required>
+                        <label>Name</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" name="author" placeholder="Author">
+                        <label>Author</label>
+                    </div>
+                    <div class="form-floating">
+                        <textarea class="form-control" name="description" placeholder="Description"></textarea>
+                        <label>Description</label>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0 justify-content-center">
+                    <button class="btn btn-primary" onclick="createNewMod()">Create</button>
                 </div>
             </div>
         </div>

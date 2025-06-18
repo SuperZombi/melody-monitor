@@ -341,6 +341,25 @@ async function openModsStore(){
 	})
 }
 
+function openNewModDialog(){
+	let modal = new bootstrap.Modal(document.querySelector('#new-mod-modal'))
+	modal.show()
+	document.querySelector('#new-mod-modal')
+}
+function createNewMod(){
+	let inputs = document.querySelectorAll("#new-mod-form input, #new-mod-form textarea")
+	for (let input of inputs) {
+		if (!input.checkValidity()){
+			return input.reportValidity()
+		}
+	}
+	let result = Object.fromEntries(
+		Array.from(inputs).map(el => [el.name, el.value])
+	)
+	console.log(result)
+}
+
+
 function Modal(text, actions=null){
 	let modelEl = document.querySelector("#main-modal")
 	modelEl.querySelector("[modal-text]").innerText = text;
