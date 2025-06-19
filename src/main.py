@@ -18,6 +18,10 @@ __version__ = "1.3.1"
 SETTINGS = None
 MODS = []
 MODS_SETTINGS = {}
+FilteredApps = {
+    "mode": "exclude",
+    "apps": []
+}
 
 #####
 def resource_path(relative_path):
@@ -75,6 +79,26 @@ def get_media_info():
         answer.thumbnail = loop.run_until_complete(answer.thumbnail.get())
     eel.update_media_info(vars(answer))
 
+@eel.expose
+def get_active_sessions():
+    loop = asyncio.get_event_loop()
+    res = loop.run_until_complete(systemManager.get_active_sessions())
+    return res
+
+@eel.expose
+def get_my_filters():
+    return FilteredApps
+
+@eel.expose
+def update_filters(mode, apps):
+    global FilteredApps
+    FilteredApps = {
+        "mode": mode,
+        "apps": apps
+    }
+    systemManager.set_filters(FilteredApps["apps"], mode=FilteredApps["mode"])
+    with open(exe_path("filters.json"), 'w', encoding='utf-8') as f:
+        f.write(json.dumps(FilteredApps, ensure_ascii=False))
 
 async def addEventListeners():
     while True:
@@ -155,7 +179,7 @@ def parse_config(data):
 
 
 def load_settings():
-    global SETTINGS
+    global SETTINGS, FilteredApps
     with open(resource_path(os.path.join("data", "settings.config.json")), 'r', encoding='utf-8') as f:
         template = parse_config(json.loads(f.read()))
         SETTINGS = SettingsManager(template)
@@ -164,6 +188,11 @@ def load_settings():
         with open(exe_path("settings.user.json"), 'r', encoding='utf-8') as f:
             user_settings = json.loads(f.read())
             SETTINGS.load_settings(user_settings)
+
+    if os.path.exists(exe_path("filters.json")):
+        with open(exe_path("filters.json"), 'r', encoding='utf-8') as f:
+            FilteredApps = json.loads(f.read())
+            systemManager.set_filters(FilteredApps["apps"], mode=FilteredApps["mode"])
 
 def load_mods_settings():
     global MODS_SETTINGS

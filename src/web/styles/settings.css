@@ -113,6 +113,36 @@ i.cancel{
 i.cancel:hover{
 	color: red;
 }
+i.spin{
+	animation: spin 1s linear infinite;
+}
+@keyframes spin{
+	from{transform: rotate(0deg)}
+	to{transform: rotate(360deg)}
+}
+
+#active-apps{
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 0.5rem;
+}
+.app_filter{
+	display: flex;
+	gap: 0.5rem;
+	padding: 0.5rem;
+	border-radius: 10px;
+	border: 1px solid;
+	justify-content: space-between;
+}
+.app_filter .delete{
+	cursor: pointer;
+	color: red;
+}
+.app_filter .add{
+	cursor: pointer;
+	color: #198754;
+}
 
 .empty{
 	display: flex;

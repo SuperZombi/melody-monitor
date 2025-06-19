@@ -368,6 +368,81 @@ async function createNewMod(){
 	}
 }
 
+
+function openFilterAppsModal(){
+	let modal = new bootstrap.Modal(document.querySelector('#filter-apps-modal'))
+	modal.show()
+	update_active_apps()
+}
+async function update_active_apps(){
+	let area = document.querySelector("#active-apps")
+	area.innerHTML = ""
+	let button = document.querySelector("#update_active_apps_button")
+	button.disabled = true
+	button.querySelector("i").classList.add("spin")
+	let active_sessions = await eel.get_active_sessions()()
+	let my_filters = await eel.get_my_filters()()
+	setTimeout(_=>{
+		let radio = document.querySelector(`input[name="filter_mode"][value="${my_filters.mode}"]`)
+		radio.checked = true
+		my_filters.apps.forEach(app=>{
+			area.appendChild(buildFilter(app))
+		})
+
+		active_sessions.forEach(session=>{
+			let target = area.querySelector(`[app="${session.app}"]`)
+			if (!target){
+				target = area.appendChild(buildFilter(session.app, "add"))
+			}
+			new bootstrap.Tooltip(target, {
+				title: `<b>${session.title}</b><br>${session.artist}`,
+				html: true
+			})
+		})
+		button.disabled = false
+		button.querySelector("i").classList.remove("spin")
+	}, 250)
+}
+function buildFilter(appname, action="delete"){
+	let div = document.createElement("div")
+	div.className = "app_filter"
+	div.setAttribute("app", appname)
+	div.setAttribute("active", action=="delete")
+	div.innerHTML = `
+		<span>${appname}</span>
+		${action == "add" ? 
+			`<i class="bi bi-plus-circle-fill add"></i>` :
+			`<i class="bi bi-x-circle-fill delete"></i>`
+		}
+	`
+	let icon = div.querySelector("i")
+	function remove(){
+		div.setAttribute("active", true)
+		icon.className = "bi bi-x-circle-fill delete"
+		icon.onclick = _=>{add()}
+	}
+	function add(){
+		div.setAttribute("active", false)
+		icon.className = "bi bi-plus-circle-fill add"
+		icon.onclick = _=>{remove()}
+	}
+	icon.onclick = _=>{
+		action == "add" ? remove() : add()
+	}
+	return div
+}
+async function saveFiltersApp(){
+	let area = document.querySelector('#filter-apps-modal')
+	let mode = area.querySelector('input[name="filter_mode"]:checked').value
+	
+	let apps = [...area.querySelectorAll('#active-apps .app_filter[active="true"]')].map(filter=>{
+		return filter.getAttribute("app")
+	})
+	await eel.update_filters(mode, apps)()
+	area.querySelector("[data-bs-dismiss]").click()
+}
+
+
 function Modal(text, actions=null){
 	let modelEl = document.querySelector("#main-modal")
 	modelEl.querySelector("[modal-text]").innerText = text;
