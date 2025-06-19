@@ -4,7 +4,7 @@ body {
     height: 100vh;
     overflow: hidden;
     --margin: 8px;
-    --padding: 16px;
+    --padding: 0.6em;
     font-size: 12pt;
     --background: rgba(255, 255, 255, 0.8);
     --shadow: 0 0 4px rgba(0, 0, 0, 0.5);
@@ -21,7 +21,7 @@ body {
     width: calc(100% - var(--margin) * 2);
     height: calc(100% - var(--margin) * 2);
     background-color: var(--background);
-    border-radius: 10px;
+    border-radius: 0.6em;
     box-shadow: var(--shadow);
     gap: 1em;
     padding: var(--padding);
@@ -54,7 +54,7 @@ body {
     height: 100%;
     aspect-ratio: 1 / 1;
     object-fit: cover;
-    border-radius: 6px;
+    border-radius: 0.4em;
 }
 .track-details {
     flex: 1;
