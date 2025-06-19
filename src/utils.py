@@ -252,7 +252,7 @@ class MediaInfoInterface(ABC):
 
 
 
-class WindowsMediaInfo():
+class WindowsMediaInfo(MediaInfoInterface):
     def __init__(self): pass
 
     async def get_session(self):
