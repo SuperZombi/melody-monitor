@@ -242,30 +242,72 @@ class Metadata():
             self.thumbnail == other.thumbnail
         )
 
+@dataclass
+class ActiveSession():
+    artist: str = ""
+    title: str = ""
+    app: str = ""
 
 
 class MediaInfoInterface(ABC):
-    def __init__(self): pass
+    def __init__(self):
+        self.allowed_filter_modes = ["exclude", "include"]
+        self.filters = []
+        self.mode = self.allowed_filter_modes[0]
 
     @abstractmethod
     async def get_media_info(self) -> Metadata: pass
 
+    @abstractmethod
+    def set_filters(self, filters:list, mode:str): pass
+
+    @abstractmethod
+    async def get_active_sessions(self): pass
+
+    def is_valid_filter_mode(self, mode:str) -> bool:
+        if not mode in self.allowed_filter_modes:
+            raise ValueError(f'Invalid filter mod "{mode}". Allowed: {self.allowed_filter_modes}')
+        return True
+
+    def allowed_app(self, app):
+        return (app in self.filters) if self.mode == "include" else (app not in self.filters)
 
 
 class WindowsMediaInfo(MediaInfoInterface):
-    def __init__(self): pass
+    def __init__(self):
+        super().__init__()
+
+    def set_filters(self, filters, mode):
+        if self.is_valid_filter_mode(mode):
+            self.filters = filters
+            self.mode = mode
+
+    async def get_active_sessions(self):
+        result = []
+        manager = await MediaManager.request_async()
+        for session in manager.get_sessions():
+            info = await session.try_get_media_properties_async()
+            result.append(vars(ActiveSession(
+                title=info.title,
+                artist=info.artist,
+                app=session.source_app_user_model_id
+            )))
+        return result
 
     async def get_session(self):
         manager = await MediaManager.request_async()
 
         active_sessions = list(
-            filter(lambda session: session.get_playback_info().playback_status == PlayStatus.PLAYING,
-            manager.get_sessions())
+            filter(
+                lambda session: self.allowed_app(session.source_app_user_model_id),
+                filter(
+                    lambda session: session.get_playback_info().playback_status == PlayStatus.PLAYING,
+                    manager.get_sessions()
+                )
+            )
         )
         if len(active_sessions) > 0:
             return active_sessions[0]
-        else:
-            return manager.get_current_session()
 
     async def get_media_info(self):
         metadata = Metadata()

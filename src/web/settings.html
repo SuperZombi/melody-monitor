@@ -17,6 +17,9 @@
         <div id="main" class="d-flex flex-column gap-3"></div>
     </div>
     <div>
+        <button class="btn btn-primary" onclick="openFilterAppsModal()">Filter Apps</button>
+    </div>
+    <div>
         <h3 align="center" class="mt-2 mb-3">Mods</h3>
         <div class="d-flex justify-content-center gap-2 mb-3">
             <button class="btn btn-primary" onclick="openModsStore()">Mods store</button>
@@ -61,6 +64,35 @@
                 </div>
                 <div class="modal-footer border-0 pt-0 justify-content-center">
                     <button class="btn btn-primary" onclick="createNewMod()">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="filter-apps-modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title">Filter Apps</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body d-flex flex-column align-items-center gap-2 pb-2">
+                    <div>
+                        <input type="radio" class="btn-check" name="filter_mode" id="filter_mode_exclude" value="exclude">
+                        <label class="btn" for="filter_mode_exclude">Exclude</label>
+
+                        <input type="radio" class="btn-check" name="filter_mode" id="filter_mode_include" value="include">
+                        <label class="btn" for="filter_mode_include">Include</label>
+                    </div>
+
+                    <div id="active-apps"></div>
+                    <button class="btn btn-outline-primary d-flex gap-1" onclick="update_active_apps()" id="update_active_apps_button">
+                        <i class="bi bi-arrow-clockwise"></i>Refresh
+                    </button>
+
+                </div>
+                <div class="modal-footer border-0 pt-0 justify-content-center">
+                    <button class="btn btn-success w-25" onclick="saveFiltersApp()">OK</button>
                 </div>
             </div>
         </div>
