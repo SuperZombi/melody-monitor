@@ -347,7 +347,6 @@ function openNewModDialog(){
 	})
 	let modal = new bootstrap.Modal(document.querySelector('#new-mod-modal'))
 	modal.show()
-	document.querySelector('#new-mod-modal')
 }
 async function createNewMod(){
 	let inputs = document.querySelectorAll("#new-mod-form input, #new-mod-form textarea")
