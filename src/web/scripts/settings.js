@@ -399,6 +399,9 @@ async function update_active_apps(){
 				html: true
 			})
 		})
+		if(area.innerHTML.trim().length == 0) {
+			area.innerHTML = `<i style="padding:1rem">No active media sessions</i>`
+		}
 		button.disabled = false
 		button.querySelector("i").classList.remove("spin")
 	}, 250)
