@@ -14,7 +14,7 @@ import time
 import requests
 
 
-__version__ = "1.4.0"
+__version__ = "1.4.1"
 SETTINGS = None
 MODS = []
 MODS_SETTINGS = {}

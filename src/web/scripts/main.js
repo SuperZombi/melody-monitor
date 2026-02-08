@@ -18,53 +18,66 @@ var timeRenderer;
 
 eel.expose(update_media_info);
 function update_media_info(info) {
-    console.log(info);
-
     if (info.title && info.status == "PLAYING"){
         document.querySelector(".track-info").classList.add("active")
-        document.querySelector("#trackName").innerHTML = info.title
-        document.querySelector("#trackAuthor").innerHTML = info.artist
-        if (timeRenderer){clearTimeout(timeRenderer)}
-        checkMarquee()
-
-        if (info.thumbnail){
-            document.querySelector("#trackImage").src = info.thumbnail
-        }
-        else{
-            document.querySelector("#trackImage").src = document.querySelector("#trackImage").getAttribute("default")
-        }
-        if (info.total > 0){
-            document.querySelector(".progress-bar").classList.remove("hide")
-            document.querySelector(".time").classList.remove("hide")
-            document.querySelector(".progress-bar .progress").style.transition = ""
-            let percent = info.current * 100 / info.total;
-            document.querySelector(".progress-bar .progress").style.width = `${percent}%`
-
-            document.querySelector(".time-current").innerHTML = formatTime(info.current)
-            document.querySelector(".time-total").innerHTML = formatTime(info.total)
-
-            let remain = info.total - info.current;
-            setTimeout(_=>{
-                document.querySelector(".progress-bar .progress").style.transition = `${remain}s linear`
-                document.querySelector(".progress-bar .progress").style.width = "100%"
-            }, 10)
-
-            let targetTime = getUnixTime() + remain
-            function renderTime(){
-                let timeRemaining = Math.max(0, targetTime - getUnixTime())
-                let currentTime = info.total - timeRemaining
-                document.querySelector(".time-current").innerHTML = formatTime(currentTime)
-                if (timeRemaining <= 0){return}
-                timeRenderer = setTimeout(renderTime, 1000)
-            }
-            timeRenderer = setTimeout(renderTime, 1000)
-        } else{
-            document.querySelector(".progress-bar").classList.add("hide")
-            document.querySelector(".time").classList.add("hide")
+        updateInfo(info)
+    }
+    else {
+        if (document.body.getAttribute("preview_mode") == "true"){
+            document.querySelector(".track-info").classList.add("active")
+            updateInfo({
+                title: "Preview mode",
+                artist: "Melody Monitor",
+                status: "PLAYING",
+                total: 60,
+                current: 0
+            })
+        } else {
+            document.querySelector(".track-info").classList.remove("active")
         }
     }
+}
+
+function updateInfo(info){
+    document.querySelector("#trackName").innerHTML = info.title
+    document.querySelector("#trackAuthor").innerHTML = info.artist
+    if (timeRenderer){clearTimeout(timeRenderer)}
+    checkMarquee()
+
+    if (info.thumbnail){
+        document.querySelector("#trackImage").src = info.thumbnail
+    }
     else{
-        document.querySelector(".track-info").classList.remove("active")
+        document.querySelector("#trackImage").src = document.querySelector("#trackImage").getAttribute("default")
+    }
+    if (info.total > 0){
+        document.querySelector(".progress-bar").classList.remove("hide")
+        document.querySelector(".time").classList.remove("hide")
+        document.querySelector(".progress-bar .progress").style.transition = ""
+        let percent = info.current * 100 / info.total;
+        document.querySelector(".progress-bar .progress").style.width = `${percent}%`
+
+        document.querySelector(".time-current").innerHTML = formatTime(info.current)
+        document.querySelector(".time-total").innerHTML = formatTime(info.total)
+
+        let remain = info.total - info.current;
+        setTimeout(_=>{
+            document.querySelector(".progress-bar .progress").style.transition = `${remain}s linear`
+            document.querySelector(".progress-bar .progress").style.width = "100%"
+        }, 10)
+
+        let targetTime = getUnixTime() + remain
+        function renderTime(){
+            let timeRemaining = Math.max(0, targetTime - getUnixTime())
+            let currentTime = info.total - timeRemaining
+            document.querySelector(".time-current").innerHTML = formatTime(currentTime)
+            if (timeRemaining <= 0){return}
+            timeRenderer = setTimeout(renderTime, 1000)
+        }
+        timeRenderer = setTimeout(renderTime, 1000)
+    } else{
+        document.querySelector(".progress-bar").classList.add("hide")
+        document.querySelector(".time").classList.add("hide")
     }
 }
 

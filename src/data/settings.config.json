@@ -41,5 +41,11 @@
 		"label": "Display time",
 		"type": "bool",
 		"default": true
+	},
+	{
+		"name": "preview_mode",
+		"label": "Preview mode",
+		"type": "bool",
+		"default": false
 	}
 ]

@@ -110,6 +110,7 @@ body {
     font-size: 1em;
     font-family: 'Consolas', monospace;
     margin-top: 0.5em;
+    gap: 1em;
 }
 .time.hide,
 [display_time="false"] .time{

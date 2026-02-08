@@ -72,6 +72,9 @@ i.bi{
 .help{
 	cursor: help;
 }
+.pointer{
+	cursor: pointer;
+}
 
 #mods_store{
 	background: inherit;

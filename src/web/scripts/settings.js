@@ -128,7 +128,9 @@ function Setting(data){
 	}
 	else if (data.type == "bool"){
 		input_area.innerHTML = `
-			<input type="checkbox" class="form-check-input mt-0 me-2">
+			<div class="form-switch">
+				<input class="form-check-input pointer" type="checkbox" role="switch">
+			</div>
 		`
 	}
 	else if (data.type == "color"){
@@ -201,7 +203,7 @@ function Mod(data){
 					<i class="bi bi-gear-fill"></i>
 				</button>
 				<div class="form-switch">
-					<input class="form-check-input" type="checkbox" name="enable" role="switch"${data.enable?' checked':''}>
+					<input class="form-check-input pointer" type="checkbox" name="enable" role="switch"${data.enable?' checked':''}>
 				</div>
 			</div>
 		</div>
