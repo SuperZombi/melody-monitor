@@ -1,7 +1,7 @@
 # Melody Monitor for OBS
 
 <p align="right">
-    <img align="left" src="https://shields.io/badge/version-v1.4.0-blue">
+    <img align="left" src="https://shields.io/badge/version-v1.4.1-blue">
     <a href="#donate"><img src="https://shields.io/badge/💲-Support_the_Project-2ea043"></a>
 </p>
 
