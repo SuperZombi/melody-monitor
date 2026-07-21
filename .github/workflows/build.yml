@@ -13,23 +13,25 @@ jobs:
         shell: pwsh
         working-directory: ./src
     steps:
-    - name: Checkout the repo
-      uses: actions/checkout@v4
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.12"
-    - name: Install Python dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r ../github/requirements.txt
+      - name: Checkout the repo
+        uses: actions/checkout@v6
 
-    - name: Build
-      run: pyinstaller --noconfirm --onefile --noconsole --name "Melody Monitor" --icon="data/music.ico" --version-file="../github/ver.txt" --add-data "web\\;.\\web" --add-data "data\\;.\\data" main.py
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r ../github/requirements.txt
 
-    - name: Upload
-      uses: xresloader/upload-to-github-release@v1
-      with:
-        file: "./src/dist/Melody Monitor.exe"
-        overwrite: true
-        update_latest_release: true
+      - name: Build
+        run: pyinstaller --noconfirm --onefile --noconsole --name "Melody Monitor" --icon="data/music.ico" --version-file="../github/ver.txt" --add-data "web\\;.\\web" --add-data "data\\;.\\data" main.py
+
+      - name: Upload
+        uses: xresloader/upload-to-github-release@v1
+        with:
+          file: "./src/dist/Melody Monitor.exe"
+          overwrite: true
+          update_latest_release: true
